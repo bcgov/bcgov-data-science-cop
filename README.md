@@ -6,8 +6,12 @@ bcgov-data-science-cop
 This repository is intended to house presentation materials from bcgov Data Science Community or Practice (CoP) events. If you have participated in a bcgov Data Science CoP event and would like to contribute your presentation materials to this repository please open a pull request. Individual events are given their own sub-directory. Please contribute your materials to that sub-directory.
 
 ### Why?
-To share practices, inspire each other & support continuous learning using in data science in the BC Public Service
+To share practices, inspire each other & support continuous learning using in data science in the BC Public Service.
 
+For resources & materials from past Data Science CoP and related events, you can visit:
+
+ - [bcgov-data-science-resources Wiki](https://github.com/bcgov/bcgov-data-science-resources/wiki)
+ - [bcgov useR repository](https://github.com/bcgov/bcgov-useR)
 
 ### Getting Help or Reporting an Issue
 
