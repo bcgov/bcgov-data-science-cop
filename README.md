@@ -9,7 +9,7 @@ This repository is intended to house presentation materials from bcgov Data Scie
 To share practices, inspire each other & support continuous learning using in data science in the BC Public Service.
 
 
-_**April CoP Event**_: [bcgov Data Science Demo Day (Victoria, 17 April 2019)](2019/2019-04-17_ds_demo_day_yyj/README.md)
+_**April CoP Event**_: [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
 
 
 For bcgov Data Science resources & materials from past and related events, you can also visit:
