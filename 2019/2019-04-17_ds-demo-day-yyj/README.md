@@ -48,9 +48,9 @@ _**Afternoon**_
 
 **1:30pm &mdash; Data Science in bcgov Demo Talks**  
 
-- What did the database say to R? Let’s talk: How to talk to databases in R using (almost) no SQL (*Sam Albers*)
 - Demo of the new GCPE GDX Integrated Analytics Service (*Dan Pollock*)
 - From messy to tidy: case for a data science workflow (*Noushin Nabavi*)
+- What did the database say to R? Let’s talk: How to talk to databases in R using (almost) no SQL (*Sam Albers*)
 - Reproducible satellite image analysis for the detection of environmental change (*Alex Bevington*)
 
 _**Evening**_ 
