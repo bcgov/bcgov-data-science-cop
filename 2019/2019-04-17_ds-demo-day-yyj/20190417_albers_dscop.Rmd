@@ -1,0 +1,447 @@
+---
+title: "What did the database say to R?"
+subtitle: "Let’s talk: How to talk to databases in R using (almost) no SQL"
+author: "Sam Albers <br> Knowledge Management Branch <br><br> BC Ministry of Environment and Climate Change Strategy <br><br> bcgov Data Science Demo Day <br>"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["default", "default-fonts", "hygge"]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: "https://platform.twitter.com/widgets.js"
+      ratio: '16:9'
+---
+
+
+layout: true
+class: inverse
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+options(htmltools.dir.version = FALSE)
+options(width = 90)
+options(max_print = 5)
+
+```
+
+```{r, warning=FALSE, echo=FALSE}
+bg_black <- "#272822"
+
+theme_set(theme_void() %+replace%
+            theme(legend.text = element_text(colour = "white", size = 18),
+                  legend.title = element_text(colour = "white", size = 18),
+                  plot.background = element_rect(fill = bg_black, color = bg_black),
+                  axis.text = element_text(colour = "white", size = 16),
+                  axis.title = element_text(colour = "white", size = 18),
+                  axis.title.y = element_text(angle = 90, vjust = 1),
+                  plot.title = element_text(colour = "white", size = 22, hjust = 0)))
+```
+
+
+# Which data science tool?
+```{r, echo=FALSE}
+#knitr::include_graphics("all_tools.png") ## locally stored image
+```
+
+---
+# Guiding Principles
+
+> I find pushing a simple workflow to its breaking point (or just past) is v. effective for figuring out your actual needs
+
+<center><blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr">also, there&#39;s this tendency to urge people to take on a lot of complexity for some problem they don&#39;t have (yet?) -- <br>the workflow equivalent of YAGNI<br><br>I find pushing a simple workflow to its breaking point (or just past) is v. effective for figuring out your actual needs</p>&mdash; Jenny Bryan (@JennyBryan) <a href="https://twitter.com/JennyBryan/status/1115647193724014593?ref_src=twsrc%5Etfw">April 9, 2019</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</center>
+
+---
+
+background-image: url(http://www2.padi.com/blog/wp-content/uploads/2015/12/113173144.jpg)
+background-size: cover
+
+# Guiding Principles
+
+---
+
+
+## Disclaimers
+- I think programmatic approaches are best
+- Only make it as hard as it needs to be
+- This is how I know how to solve this problem
+- There is no single best way to accomplish this
+
+
+## For instance...
+```{r, message=FALSE, warning=FALSE, cache=TRUE}
+package_db <- as_tibble(tools::CRAN_package_db(), .name_repair = "unique")
+
+filter(package_db, str_detect(Package, "xl")) %>% 
+  pull(Package)
+
+```
+
+---
+# Road map
+
+## <span style="color:blue">The Problem</span>
+
+## An in-memory example
+
+## A small database example
+
+## A very very large database example
+
+---
+
+.pull-left[
+## The Problem
+- Many data science tasks are repetitive yet interactive
+- Helpful to abstract away unneeded complexity when possible
+- A clean and easy to remember syntax reduces your cognitive load when doing data science
+
+
+
+<center><img src="https://www.herocollector.com/Content/ArticleImages/7a716739-72cb-40d5-acfc-dfc35783d8a5.jpg" style="width: 450px;"/></center>
+
+
+
+]
+
+--
+
+.pull-right[
+## Enter `dplyr`
+> a consistent set of verbs that help you solve the most common data manipulation challenges
+
+- Independent of the data source
+- Designed for data science
+
+<center><img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png" style="width: 300px;"/></center>
+
+]
+
+---
+
+#`dplyr` verbs
+
+Functions with English meanings that map directly to the action being taken when that function is called
+
+.pull-left[
+- `mutate()` adds new variables that are functions of existing variables
+- `select()` picks variables based on their names.
+- `filter()` picks cases based on their values.
+- `summarise()` reduces multiple values down to a single summary.
+- `arrange()` changes the ordering of the rows.
+]
+
+
+.pull-right[
+<center><img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_wrangling.png" style="width: 450px;"/></center>
+
+Artwork by [@allison_horst](https://twitter.com/allison_horst)
+] 
+---
+
+
+class: center
+background-image: url(https://media.giphy.com/media/3o7abL1nxw0AvOK1pu/giphy.gif)
+background-size: cover
+
+
+# An in-memory Example
+---
+
+```{r, eval=FALSE}
+library(dplyr)
+```
+
+
+```{r}
+starwars
+```
+
+---
+## An API that grew - base R
+
+```{r}
+starwars_sub <- starwars[starwars$eye_color == "yellow",]
+
+starwars_sub$hair_color <- factor(starwars_sub$hair_color, exclude = "")
+
+setNames(aggregate(height ~ hair_color, starwars_sub, mean), c("hair_color", "mean_height"))
+```
+
+---
+
+## An API that was designed - `dplyr`
+
+```{r}
+starwars %>% tally()
+
+starwars %>% 
+  filter(eye_color == "yellow") %>% 
+  group_by(hair_color) %>% 
+  summarise(mean_height = mean(height))
+```
+
+---
+
+.pull-left[
+## Why use a database?
+- That's where the data is
+- Bigger data than what you can handle locally
+- Same common tasks can be handled by the database
+
+
+## Why not?
+- Cost to learn SQL from scratch
+- Diverse landscape
+]
+
+.pull-right[
+
+--
+
+## How?
+- Normally you query a database with `SQL` code:
+
+```{sql, eval = FALSE}
+SELECT genus, species
+FROM species
+WHERE taxa = 'Bird'
+ORDER BY species_id ASC;
+```
+
+- `dplyr` translate to `SQL` - Take advantage of readable code
+- Transfer those skills to a database without learning any `SQL`
+- Only ever pull the data when to explicitly ask for it
+- Lower cognitive cost of switching languages: Stay in R!
+]
+
+---
+# Road map
+
+## The Problem
+
+## An in-memory example
+
+## <span style="color:blue">A small database example</span>
+
+## A very very large database example
+---
+## River database
+
+.pull-left[
+```{r, message = FALSE, warning=FALSE, echo=FALSE, cache=TRUE, fig.width=6.9, fig.height=5.9, fig.align='center'}
+## Some conflict between spatial packages and bigrquery. Not dealing with it.
+# library(raster)
+# library(sf)
+# library(tidyhydat)
+# library(rmapshaper)
+# 
+# canada <- getData(country = "CAN", level = 0) %>% 
+#   st_as_sf() %>% 
+#   st_transform(42304) %>% 
+#   ms_simplify()
+# 
+# 
+# stations <- st_as_sf(hy_stations(prov_terr_state_loc = "CA"),
+#                      coords = c("LONGITUDE", "LATITUDE"),
+#                      crs = 4326,
+#                      agr = "constant") %>% 
+# st_transform(42304)
+# 
+# 
+# readr::write_rds(stations, "data/stations.rds")
+# readr::write_rds(canada, "data/canada.rds")
+
+
+canada <- read_rds("data/canada.rds")
+stations <- read_rds("data/stations.rds")
+
+ggplot() +
+  geom_sf(data = canada, fill = NA) +
+  geom_sf(data = stations, size = 1, colour = "blue") +
+  coord_sf(datum = NA) 
+
+```
+]
+
+.pull-right[
+```{r}
+## you'll need to download hydat if you actually want to run this .rmd
+## available here: http://collaboration.cmc.ec.gc.ca/cmc/hydrometrics/www/
+fs::file_size("Hydat.sqlite3")
+```
+
+## 7831 stations
+## SQLite database
+## Self contained
+]
+
+---
+## River database
+```{r}
+library(DBI)
+library(RSQLite)
+
+con <- dbConnect(SQLite(), "Hydat.sqlite3")
+
+dbListTables(con)
+
+```
+
+
+---
+
+```{r}
+tbl(con, "DLY_FLOWS") %>% tally()
+
+tbl(con, "DLY_FLOWS") %>% 
+  filter(YEAR >= 2000) %>% 
+  group_by(STATION_NUMBER, YEAR) %>% 
+  summarise(annual_mean = mean(MONTHLY_MEAN, na.rm = TRUE))
+```
+
+---
+
+```{r}
+tbl(con, "DLY_FLOWS") %>% tally() %>% show_query()
+
+tbl(con, "DLY_FLOWS") %>% 
+  filter(YEAR >= 2000) %>% 
+  group_by(STATION_NUMBER, YEAR) %>% 
+  summarise(annual_mean = mean(MONTHLY_MEAN, na.rm = TRUE)) %>% 
+  show_query()
+```
+
+
+---
+## A comparison
+```{r, eval=FALSE}
+DLY_FLOWS_memory <- read_csv("data/DLY_FLOWS.csv")
+
+DLY_FLOWS_memory %>% tally()
+
+DLY_FLOWS_memory %>% 
+  filter(YEAR >= 1950) %>% 
+  group_by(STATION_NUMBER, YEAR) %>% 
+  summarise(annual_mean = mean(MONTHLY_MEAN, na.rm = TRUE))
+```
+---
+# Road map
+
+## The Problem
+
+## An in-memory example
+
+## A small database example
+
+## <span style="color:blue">A very very large database example</span>
+
+---
+
+class: center
+background-image: url(https://media.giphy.com/media/l4EoPR59UqomvFUKk/giphy.gif)
+background-size: cover
+
+## New York City Yellow Cab Rides
+
+---
+## BigQuery
+```{r}
+library(DBI)
+library(bigrquery)
+library(modeldb)
+library(dbplot)
+```
+
+
+```{r, cache=TRUE}
+## To actually run this you will need to open a trial bigquery account and then for the billing filed use your project name. 
+con <- dbConnect(
+  bigquery(),
+  project = "bigquery-public-data",
+  dataset = "new_york_taxi_trips",
+  billing = "",
+  use_legacy_sql = FALSE
+)
+
+tbl(con, "tlc_yellow_trips_2018") %>% 
+  tally()
+```
+
+---
+## Talking to the database
+```{r, cache=TRUE}
+tbl(con, "tlc_yellow_trips_2018") %>% 
+  select(tip_amount) %>% 
+  top_n(10)
+```
+---
+
+## Some data cleaning
+
+```{r, cache=TRUE}
+query <- tbl(con, "tlc_yellow_trips_2018") %>% 
+  filter(pickup_datetime > "2018-01-01 00:00:00", pickup_datetime < "2018-03-01 00:00:00") %>% 
+  filter(fare_amount >= 0, tip_amount >= 0, !is.na(fare_amount)) %>% 
+  filter(fare_amount < 500) 
+show_query(query)
+
+query %>% tally()
+```
+
+
+---
+
+## New York City Yellow Cab Rides
+```{r, cache=TRUE, warning=FALSE, message=FALSE, fig.width=14, fig.height=5}
+(p <- dbplot_raster(query, x = fare_amount, y = tip_amount, resolution = 500,
+              fill = mean(trip_distance, na.rm = TRUE)) +
+  scale_fill_distiller(name = "Trip Length (miles)") +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_x_continuous(labels = scales::dollar) +
+  labs(x = "Tip Amount", y = "Fare Amount"))
+```
+
+---
+## Model 17 million records
+
+```{r, cache=TRUE, warning=FALSE, message=FALSE, fig.width=14, fig.height=5}
+reg <- query %>% 
+  select(fare_amount, tip_amount) %>% 
+  linear_regression_db(tip_amount)
+
+p + geom_abline(intercept = reg$`(Intercept)`, slope = reg$fare_amount, colour = "#48fb47")
+```
+
+---
+# `sum(presentation, na.rm = TRUE)`
+
+## Activities in data sciences are often repetitive
+## `dplyr` lowers the barriers to accomplishing common data science tasks
+## Working with databases enhances the power of your computer
+## If possible let the database do the work for you
+---
+
+# Resources
+- [Best Practices for working with databases](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases/)
+- [Databases using R](https://resources.rstudio.com/rstudio-conf-2019/databases-using-r-the-latest)
+- [RStudio database page](https://db.rstudio.com/)
+- [R for Data Science](https://r4ds.had.co.nz/)
+- [dplyr](https://dplyr.tidyverse.org/)
+- [bigquery](https://cloud.google.com/bigquery/public-data/)
+- [dbplot](https://db.rstudio.com/dbplot/)
+- [Allison Hill xaringan slides](https://github.com/apreshill/talks/blob/master/orasa-big-magic/slides.Rmd)
+
+
+
+<center><img src="https://media.giphy.com/media/iiS84hOJXh1Pq/giphy.gif" style="width: 500px;"/></center>
+
+
+
