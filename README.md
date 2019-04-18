@@ -8,14 +8,11 @@ This repository is intended to house presentation materials from bcgov Data Scie
 ### Why?
 To share practices, inspire each other & support continuous learning using in data science in the BC Public Service.
 
+### Past Events
+ - [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
+ - [bcgov UseR Day (Victoria, 11 October 2018)](https://github.com/bcgov/bcgov-useR/tree/master/2018)
 
-_**April CoP Event**_: [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
-
-
-For bcgov Data Science resources & materials from past and related events, you can also visit:
-
- - [bcgov-data-science-resources Wiki](https://github.com/bcgov/bcgov-data-science-resources/wiki)
- - [bcgov useR repository](https://github.com/bcgov/bcgov-useR)
+Visit the [bcgov-data-science-resources Wiki](https://github.com/bcgov/bcgov-data-science-resources/wiki) to find some data science resources for BC Public Servants.
 
 ### Getting Help or Reporting an Issue
 
