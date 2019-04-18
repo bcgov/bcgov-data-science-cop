@@ -49,9 +49,9 @@ _**Afternoon**_
 **1:30pm &mdash; Data Science in bcgov Demo Talks**  
 
 - Demo of the new GCPE GDX Integrated Analytics Service (*Dan Pollock*)
-- From messy to tidy: case for a data science workflow (*Noushin Nabavi*)
-- What did the database say to R? Let’s talk: How to talk to databases in R using (almost) no SQL (*Sam Albers*)
-- Reproducible satellite image analysis for the detection of environmental change (*Alex Bevington*)
+- [From messy to tidy: case for a data science workflow (*Noushin Nabavi*)](cop-ds-nn-2019-04-17.pdf)
+- [What did the database say to R? Let’s talk: How to talk to databases in R using (almost) no SQL (*Sam Albers*)](20190417_albers_dscop.pdf)
+- [Reproducible satellite image analysis for the detection of environmental change (*Alex Bevington*)](20190417_bevington_dscop.pdf)
 
 _**Evening**_ 
 
