@@ -6,9 +6,9 @@ r-geospatial-workshop-hackathon
 North Area staff driven training event in Prince George. 
 
 ### Who, what, where, when? 
-- Internal BC Government North Area Training 
-- To learn about geopatial tools in R.
-- Aleza Room, Plaza 400, 1011 4th Ave, Prince George, BC V2L 3H9 
+- BC Government North Area Training 
+- To learn about geopatial tools in R
+- Aleza Room, Plaza 400, 1011 4th Ave, Prince George, BC V2L 3H9
 - 1 PM Tuesday November 5th to 5 PM Friday November 8th, 2019
 
 ### Target Audience
@@ -43,9 +43,11 @@ Current intermediate BC Government R users who would like to do more geospatial 
 -	Two end of day presentations 
 -	Group dinner (self-pay)
 
-####	Day 3 – Thursday “Geocomputation in R” – external instructor
--	AM: Spatio-temporal analysis 
--	PM: Multivariate techniques and Machine learning 
+####	Day 3 – Thursday “Geocomputation and Machine Learning in R” – external instructor
+-	AM: Trends and new opportunities in processing spatial and Earth Observation data in R
+- AM: Five key steps to processing large rasters in R
+- PM: Ensemble Machine Learning as a general framework for predictive mapping (model training, feature selection, tuning and final predictions including prediction errors)
+- PM: Automated predictive mapping using landmap package
 -	Two end of day presentations 
 -	Group dinner (self-pay)
 
