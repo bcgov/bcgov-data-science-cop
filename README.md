@@ -3,13 +3,13 @@
 bcgov-data-science-cop
 ============================
 
-This repository is intended to house presentation materials from the bcgov Data Science Community of Practice (CoP) and other related bcgov data science events. If you have participated in a bcgov Data Science CoP event and would like to contribute your presentation materials to this repository please open a pull request. Individual events are given their own sub-directory. Please contribute your materials to that sub-directory.
+This repository is intended to house presentation materials from bcgov Data Science Community of Practice (CoP) and other related bcgov data science events. If you have participated in a bcgov Data Science CoP event and would like to contribute your presentation materials to this repository please open a pull request. Individual events are given their own sub-directory. Please contribute your materials to that sub-directory.
 
 ### Why?
 To share practices, inspire each other & support continuous learning in data science in the BC Public Service.
 
 ### Upcoming Data Science Events
- - [FLNRO-sponsered Northern Area bcgov R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-11-05_r-spatial-pg)
+ - [FLNRO-sponsered bcgov North Area R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-11-05_r-spatial-pg)
 
 ### Past Data Science Events
  - [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
