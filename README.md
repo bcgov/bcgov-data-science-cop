@@ -1,18 +1,21 @@
-<a id="devex-badge" rel="Inspiration" href="https://github.com/BCDevExchange/assets/blob/master/README.md"><img alt="An idea being explored and shaped. Open for discussion, but may never go anywhere." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/inspiration.svg" title="An idea being explored and shaped. Open for discussion, but may never go anywhere." /></a>
+<a id="devex-badge" rel="Delivery" href="https://github.com/BCDevExchange/assets/blob/master/README.md"><img alt="In production, but maybe in Alpha or Beta. Intended to persist and be supported." style="border-width:0" src="https://assets.bcdevexchange.org/images/badges/delivery.svg" title="In production, but maybe in Alpha or Beta. Intended to persist and be supported." /></a>
 
 bcgov-data-science-cop
 ============================
 
-This repository is intended to house presentation materials from bcgov Data Science Community or Practice (CoP) events. If you have participated in a bcgov Data Science CoP event and would like to contribute your presentation materials to this repository please open a pull request. Individual events are given their own sub-directory. Please contribute your materials to that sub-directory.
+This repository is intended to house presentation materials from the bcgov Data Science Community of Practice (CoP) and other related bcgov data science events. If you have participated in a bcgov Data Science CoP event and would like to contribute your presentation materials to this repository please open a pull request. Individual events are given their own sub-directory. Please contribute your materials to that sub-directory.
 
 ### Why?
-To share practices, inspire each other & support continuous learning using in data science in the BC Public Service.
+To share practices, inspire each other & support continuous learning in data science in the BC Public Service.
 
-### Past Events
+### Upcoming Data Science Events
+ - [FLNRO-sponsered Northern Area bcgov R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-11-05_r-spatial-pg)
+
+### Past Data Science Events
  - [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
  - [bcgov UseR Day (Victoria, 11 October 2018)](https://github.com/bcgov/bcgov-useR/tree/master/2018)
 
-Visit the [bcgov-data-science-resources Wiki](https://github.com/bcgov/bcgov-data-science-resources/wiki) to find some data science resources for BC Public Servants.
+**Visit the [bcgov-data-science-resources Wiki](https://github.com/bcgov/bcgov-data-science-resources/wiki)** to find some data science resources for BC Public Servants.
 
 ### Getting Help or Reporting an Issue
 
