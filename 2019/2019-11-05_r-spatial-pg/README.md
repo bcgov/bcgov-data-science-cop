@@ -9,7 +9,7 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0
 
 # bcgov North Area R Geospatial Workshop & Hackathon
 
-FLNRO-sponsered bcgov North Area staff-driven training event in Prince George, British Columbia 
+FLNRO-sponsored bcgov North Area staff-driven training event in Prince George, British Columbia 
 
 ### Who, What, Where, When? 
 - B.C. Government North Area Training 
