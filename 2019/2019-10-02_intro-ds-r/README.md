@@ -15,7 +15,7 @@ _**When & Where?**_
 
 Wednesday, October 2<sup>nd</sup>, 2019  
 9:00am to 4:30pm (doors open @ 8:30am)  
-Victoria Conference Centre - Oak Bay Room 
+Victoria Conference Centre - Oak Bay Room  
 720 Douglas Street, Victoria, BC    
 
 
