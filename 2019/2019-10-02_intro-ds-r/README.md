@@ -15,8 +15,8 @@ _**When & Where?**_
 
 Wednesday, October 2<sup>nd</sup>, 2019  
 9:00am to 4:30pm (doors open @ 8:30am)  
-Victoria Conference Centre  
-1012 Douglas Street, Victoria, BC    
+Victoria Conference Centre - Oak Bay Room 
+720 Douglas Street, Victoria, BC    
 
 
 ### Workshop Agenda
@@ -39,6 +39,6 @@ Sam, Steph & Andy are BC Public Servants who use R in their data work flows ever
 ------
 
 ### Registration
-Registration is through [Eventbrite](), the event capacity is 35 attendees. Please note that approvals and travel expenses are the responsibility of the attendees. Contact stephanie.hazlitt [at] gov.bc.ca with questions.
+Registration is through [Eventbrite](https://www.eventbrite.ca/e/introduction-to-data-science-in-r-tickets-72430837585), the event capacity is 35 attendees. Please note that approvals and travel expenses are the responsibility of the attendees. Contact stephanie.hazlitt [at] gov.bc.ca with questions.
 
 In the interest of ensuring a safe environment for everyone, all attendees, instructors and organisers of the _Introduction to Data Science using R Workshop_ (Victoria, October 2019) must agree to follow the [bcgov standards of conduct](https://www2.gov.bc.ca/gov/content/careers-myhr/about-the-bc-public-service/ethics-standards-of-conduct/standards-of-conduct) and the day’s [code of conduct](https://www.contributor-covenant.org/version/1/4/code-of-conduct).
