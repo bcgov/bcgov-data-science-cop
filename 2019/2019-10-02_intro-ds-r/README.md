@@ -26,7 +26,7 @@ Coming Soon!
 
 ### Logistics
 - In-person training only
-- Lunch is _not_ included
+- Lunch/snacks are _not_ included, although coffee will be provided ☕
 - Please bring a laptop (and your charge cord) with both R & RStudio _already_ installed (some helpful instructions can be found [here](https://github.com/bcgov/bcgov-data-science-resources/wiki/Installing-R-&-RStudio))
 - Please reach out to one of the instructors _in advance_ of the workshop if you have any trouble installating the required software
 
