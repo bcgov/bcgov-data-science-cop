@@ -39,14 +39,12 @@ Current intermediate B.C. Government R users who would like to do more geospatia
 
 #### Day 1 – Tuesday “Best Practices for Code Sharing” [Instructors: bcgov staff]
 - AM: Open house for software installation (RStudio, R, Git) and GitHub account creation [_optional_]
-- PM: git + bcgov GitHub & RStudio
-- Two end-of-day presentations
+- PM: git + bcgov GitHub & Project Management with RStudio
 -	Social ice breaker (_self-pay_)
 
 ####	Day 2 – Wednesday “Introduction to Geospatial in R” [Instructors: bcgov staff]
 -	AM: Vector manipulation and visualization
 -	PM: Raster manipulation and visualization
--	Two end-of-day presentations 
 -	Group dinner (_self-pay_)
 
 ####	Day 3 – Thursday “Geocomputation & Machine Learning in R” [Instructor: [Tomislav Hengl](https://github.com/thengl)]
@@ -54,7 +52,6 @@ Current intermediate B.C. Government R users who would like to do more geospatia
 - AM: Five key steps to processing large rasters in R
 - PM: Ensemble Machine Learning as a general framework for predictive mapping (model training, feature selection, tuning and final predictions including prediction errors)
 - PM: Automated predictive mapping using landmap package
--	Two end-of-day presentations 
 -	Group dinner (_self-pay_)
 
 #### Day 4 – Friday “Hackathon” [All Instructors On-Deck]
