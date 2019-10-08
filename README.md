@@ -15,7 +15,7 @@ To share practices, inspire each other & support continuous learning in data sci
 
 ### Meet-Up: `<bcgov/code_together>`
 
-The Data Science CoP is hosting a monthly opportunity to code together for a couple of hours in an inviting, shared space in Victoria, B.C. We hope these sessions become a regular event where members of the community can meet some other coders in bcgov---in person or digitally---and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done. _On-line details coming soon!_
+The Data Science CoP is hosting a monthly opportunity to code together for a couple of hours in an inviting, shared space in Victoria, B.C. We hope these sessions become a regular event where members of the community can meet some other coders in bcgov---in person or digitally---and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done.
 
 - Thursday, September 19th, 2019  9:30am to 11:30am
 - Thursday, October 17th, 2019  9:30am to 11:30am
@@ -27,11 +27,11 @@ first floor kitchen, Queen’s Printer Building 🏫
 
 
 ### Upcoming Data Science Training Events
- - [Introduction to Data Science using R (Victoria, 2 October 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-10-02_intro-ds-r)
  - [FLNRO-sponsered bcgov North Area R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-11-05_r-spatial-pg)
 
 
 ### Past Data Science Events
+ - [Introduction to Data Science using R (Victoria, 2 October 2019)](https://github.com/bcgov/ds-cop-intro-to-r)
  - [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
  - [bcgov UseR Day (Victoria, 11 October 2018)](https://github.com/bcgov/bcgov-useR/tree/master/2018)
 
