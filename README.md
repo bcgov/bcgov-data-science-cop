@@ -19,7 +19,7 @@ The Data Science CoP is hosting a monthly opportunity to code together for a cou
 
 - Thursday, September 19th, 2019  9:30am to 11:30am
 - Thursday, October 17th, 2019  9:30am to 11:30am
-- Thursday, November 21th, 2019  9:30am to 11:30am
+- Thursday, November 21st, 2019  9:30am to 11:30am
 - Thursday, December 12th, 2019  9:30am to 11:30am
 
 first floor kitchen, Queen’s Printer Building 🏫  
