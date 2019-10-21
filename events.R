@@ -115,6 +115,3 @@ part_by_min %>%
   theme(legend.position = "bottom")
 
 
-
- scale_fill_manual(values = getPalette(colourCount))
-
