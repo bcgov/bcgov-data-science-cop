@@ -20,6 +20,7 @@ library(dplyr)
 library(ggplot2)
 library(waffle)
 library(RColorBrewer)
+library(officer)
 
 
 # Variables --------------------------------------------------------------------
@@ -33,8 +34,6 @@ if(.Platform$OS.type == "unix"){
   ## Macbook path
   lan_data_dir <- "/Volumes/Operations/Data Science and Analytics/Data Science CoP"
 }
-
-if (!exists("tmp")) dir.create('tmp', showWarnings = FALSE)
 
 
 # Load -------------------------------------------------------------------------
@@ -88,30 +87,35 @@ part_by_min %>%
 
 # Plotting ---------------------------------------------------------------------
 
-# "Advanced Education, Skills & Training", "Agriculture", "Attorney General",
-# "Children & Family Development", "Citizens' Services", "Education",
-# "Energy, Mines & Petroleum Resources", "Environment & Climate Change Strategy",
-# "Finance", "Forests, Lands, Natural Resource Operations & Rural Development",
-# "Health", "Indigenous Relations & Reconciliation", "Jobs, Trade & Technology",
-# "Labour", "Mental Health & Addictions", "Municipal Affairs & Housing",
-# "Public Safety & Solicitor General & Emergency B.C.",
-# "Social Development & Poverty Reduction", "Tourism, Arts & Culture",
-# "Transportation & Infrastructure"
-
 colourCount = length(unique(part_by_min$ministry))
-getPalette = colorRampPalette(brewer.pal(9, "Dark2"))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
 
 #waffle plot of Min participation in all events
-part_by_min %>% 
+waffle_plot <- part_by_min %>% 
   group_by(ministry) %>% 
     summarise(count = sum(number_part)) %>% 
     ggplot(aes(fill = ministry, values = count)) +
-   geom_waffle(n_rows = 4) +
+   geom_waffle(n_rows = 7) +
  scale_fill_manual(values = getPalette(colourCount), name = NULL) +
   coord_equal() +
-  labs(title = "Data Science CoP Events: Attendance by Ministry") +
+  labs(title = "Data Science CoP Events: Participation Numbers by Ministry",
+       caption = "Includes Data from\nAugust 2018 - October 2019 Events") +
   theme_enhance_waffle() +
   theme_void() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = .5, face = "bold"),
+        plot.caption = element_text(hjust = .95, face = "italic")) +
+  guides(fill=guide_legend(ncol = 3, bycol = TRUE))
+
+
+# Outputs ----------------------------------------------------------------------
+
+summary_slide <- read_pptx()  %>% 
+  add_slide(layout = "Title and Content", master = "Office Theme") %>% 
+  ph_with(value = "Test Foo", location = ph_location_type(type = "title")) %>% 
+  ph_with(value = waffle_plot, location = ph_location_type(type = "body"))
+
+print(summary_slide, target = "reporting/ds-cop-reporting.pptx") 
+
 
 
