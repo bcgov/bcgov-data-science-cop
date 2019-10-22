@@ -17,6 +17,7 @@ library(readr)
 library(janitor)
 library (lubridate)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 library(waffle)
 library(RColorBrewer)
@@ -48,12 +49,12 @@ part_by_min <- read_csv(file.path(lan_data_dir, "cop-data-part-ministries.csv"),
 # Munging ----------------------------------------------------------------------
 
 #number of cop events
-event_part %>% 
+num_events <- event_part %>% 
   filter(cop_event_date < today()) %>% 
   count()
   
 #number of cop participants
-event_part %>%
+num_part <- event_part %>%
   filter(cop_event_date < today()) %>%
   select(in_person_participants, on_line_participants) %>%
   mutate(on_line_participants = replace_na(on_line_participants, 0)) %>%
@@ -61,13 +62,13 @@ event_part %>%
   summarise(sum(participants))
 
 #number of training events
-event_part %>%
+num_train_events <- event_part %>%
   filter(cop_event_date < today(),
          event_type == "training") %>% 
   count()
 
 #number of overall training participants (all in-person)
-event_part %>%
+num_trained <- event_part %>%
   filter(cop_event_date < today(),
          event_type == "training") %>%
   summarise(sum(in_person_participants))
@@ -84,6 +85,11 @@ part_by_min %>%
   distinct(ministry) %>% 
   count()
 
+#number of part by Ministry
+num_by_min <- part_by_min %>% 
+  select(number_part) %>% 
+  sum()
+
 
 # Plotting ---------------------------------------------------------------------
 
@@ -98,24 +104,30 @@ waffle_plot <- part_by_min %>%
    geom_waffle(n_rows = 7) +
  scale_fill_manual(values = getPalette(colourCount), name = NULL) +
   coord_equal() +
-  labs(title = "Data Science CoP Events: Participation Numbers by Ministry",
-       caption = "Includes Data from\nAugust 2018 - October 2019 Events") +
+  labs(title = "CoP Participation Numbers by Ministry",
+       subtitle = paste0("(based on ", num_by_min, " participants who provided organization information)")) +
   theme_enhance_waffle() +
   theme_void() +
   theme(legend.position = "bottom",
-        plot.title = element_text(hjust = .5, face = "bold"),
-        plot.caption = element_text(hjust = .95, face = "italic")) +
+        plot.title = element_text(hjust = .07, face = "bold"),
+        plot.subtitle = element_text(hjust = .07, face = "italic", size = 10)) +
   guides(fill=guide_legend(ncol = 3, bycol = TRUE))
 
 
 # Outputs ----------------------------------------------------------------------
 
+
 summary_slide <- read_pptx()  %>% 
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
-  ph_with(value = "Test Foo", location = ph_location_type(type = "title")) %>% 
-  ph_with(value = waffle_plot, location = ph_location_type(type = "body"))
+  ph_with(value = "Data Science CoP Summary\n", location = ph_location_type(type = "title")) %>%
+  ph_add_text(str = paste0(num_events, " events, including ", num_train_events,
+                         " training days\n", num_part, " participants overall, ",
+                         num_trained, " attended training days"),
+              style = fp_text(font.size = 18, color = "grey30")) %>% 
+  ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
+  ph_with(value = "Includes August 2018 - October 2019 Events", location = ph_location_type(type = "ftr")) 
 
-print(summary_slide, target = "reporting/ds-cop-reporting.pptx") 
+print(summary_slide, target = paste0("reporting/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
 
 
