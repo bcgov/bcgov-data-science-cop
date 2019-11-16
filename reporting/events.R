@@ -111,21 +111,23 @@ waffle_plot <- part_by_min %>%
   theme(legend.position = "bottom",
         plot.title = element_text(hjust = .07, face = "bold"),
         plot.subtitle = element_text(hjust = .07, face = "italic", size = 10)) +
-  guides(fill=guide_legend(ncol = 3, bycol = TRUE))
+  guides(fill=guide_legend(ncol = 2, bycol = TRUE))
 
 
 # Outputs ----------------------------------------------------------------------
 
+top_text <- fpar(
+    ftext("Data Science CoP Summary\n", prop = fp_text(bold = FALSE, font.size = 40)),
+    ftext(paste0(num_events, " events, including ", num_train_events,
+                         " training days\n", num_part, " participants overall, ",
+                         num_trained, " attended training days"), prop = fp_text(font.size = 16, color = "grey30")),
+    fp_p = fp_par(text.align = "center"))
 
 summary_slide <- read_pptx()  %>% 
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
-  ph_with(value = "Data Science CoP Summary\n", location = ph_location_type(type = "title")) %>%
-  ph_add_text(str = paste0(num_events, " events, including ", num_train_events,
-                         " training days\n", num_part, " participants overall, ",
-                         num_trained, " attended training days"),
-              style = fp_text(font.size = 18, color = "grey30")) %>% 
+  ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "Includes August 2018 - October 2019 Events", location = ph_location_type(type = "ftr")) 
+  ph_with(value = "Includes August 2018 - November 2019 Events", location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
