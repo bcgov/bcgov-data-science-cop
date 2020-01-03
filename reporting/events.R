@@ -15,7 +15,7 @@
 
 library(readr)
 library(janitor)
-library (lubridate)
+library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -127,7 +127,7 @@ summary_slide <- read_pptx()  %>%
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
   ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "Includes August 2018 - November 2019 Events", location = ph_location_type(type = "ftr")) 
+  ph_with(value = "Includes August 2018 - December 2019 Events", location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
