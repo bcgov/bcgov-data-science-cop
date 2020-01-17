@@ -22,7 +22,6 @@ The Data Science CoP is hosting a monthly opportunity to code together for a cou
 - ~~Thursday, November 21st, 2019  9:30am to 11:30am~~
 - ~~Thursday, December 12th, 2019  9:30am to 11:30am~~
 - CANCELLED (🌨❄️☃️️) ~~Thursday, January 16th, 2020  9:30am to 11:30am~~ 
-- Thursday, February 20th, 2020  9:30am to 11:30am
 
 first floor kitchen, Queen’s Printer Building 🏫  
 563 Superior Street, Victoria, B.C.  
