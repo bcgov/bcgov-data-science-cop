@@ -30,7 +30,6 @@ first floor kitchen, Queen’s Printer Building 🏫
 ### Upcoming Data Science Training Events
 **Stay Tuned!**
 
-
 ### Past Data Science Events
  - [FLNRO-sponsered bcgov North Area R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-r-geo-workshop)
  - [Introduction to Data Science using R (Victoria, 2 October 2019)](https://github.com/bcgov/ds-cop-intro-to-r)
