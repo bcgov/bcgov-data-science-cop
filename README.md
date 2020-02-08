@@ -15,16 +15,16 @@ To share practices, inspire each other & support continuous learning in data sci
 
 ### Meet-Up: `<bcgov/code_together>`
 
-The Data Science CoP is hosting a monthly opportunity to code together for a couple of hours in an inviting, shared space in Victoria, B.C. We hope these sessions become a regular event where members of the community can meet some other coders in bcgov---in person or digitally---and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done.
+The Data Science CoP hosts a monthly opportunity to code together for a couple of hours in the [Exchange Lab](https://www.eventbrite.ca/e/take-a-walk-on-the-agile-side-tour-of-bc-govs-exchange-lab-tickets-43946375793) lobby+kitchen&mdash;an inviting, shared space in Victoria, B.C. Members of the community can meet some other coders and digital experts in bcgov---in person or digitally---and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done.
 
-- ~~Thursday, September 19th, 2019  9:30am to 11:30am~~
-- ~~Thursday, October 17th, 2019  9:30am to 11:30am~~
-- ~~Thursday, November 21st, 2019  9:30am to 11:30am~~
-- ~~Thursday, December 12th, 2019  9:30am to 11:30am~~
-- CANCELLED (🌨❄️☃️️) ~~Thursday, January 16th, 2020  9:30am to 11:30am~~ 
+- Friday, February 21st, 2020  9:30am to 11:30am
+- Friday, March 20th, 2020 9:30am to 11:30am
+- Friday, April 17th 2020 9:30am to 11:30am
 
-first floor kitchen, Queen’s Printer Building 🏫  
-563 Superior Street, Victoria, B.C.  
+The Exchange Lab 💻🥼🏫
+3rd floor, lobby/kitchen
+1012 Douglas Street
+Victoria, B.C. 
 
 
 ### Upcoming Data Science Training Events
