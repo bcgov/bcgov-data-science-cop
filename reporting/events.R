@@ -114,6 +114,13 @@ waffle_plot <- part_by_min %>%
   guides(fill=guide_legend(ncol = 2, bycol = TRUE))
 
 
+## save waffle chart as png
+ggsave("reporting/cop-report-waffle.png", 
+       waffle_plot,
+       width = 18,
+       height = 9)
+
+
 # Outputs ----------------------------------------------------------------------
 
 top_text <- fpar(
