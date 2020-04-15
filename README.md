@@ -15,7 +15,7 @@ To share practices, inspire each other & support continuous learning in data sci
 
 ### Meet-Up: `<bcgov/code_together>`
 
-The Data Science CoP hosts a monthly opportunity&mdash;every 3<sup>rd</sup> Friday 9:30am to 11:30am&mdash;to code together for a couple of hours in the [Exchange Lab](https://www.eventbrite.ca/e/take-a-walk-on-the-agile-side-tour-of-bc-govs-exchange-lab-tickets-43946375793) lobby+kitchen&mdash;an inviting, shared space in Victoria, B.C. Members of the community can meet some other coders and digital experts in bcgov---in person or digitally---and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done.
+The Data Science CoP hosts a monthly opportunity to code together for a couple of hours in the [Exchange Lab](https://www.eventbrite.ca/e/take-a-walk-on-the-agile-side-tour-of-bc-govs-exchange-lab-tickets-43946375793) lobby+kitchen&mdash;an inviting, shared space in Victoria, B.C. Every 3<sup>rd</sup> Friday of the month&mdash;9:30am to 11:30am&mdash;members of the community can meet some other coders and digital experts in bcgov and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done.
 
 The Exchange Lab 💻🥼🏫  
 3rd floor, lobby/kitchen  
@@ -23,6 +23,7 @@ The Exchange Lab 💻🥼🏫
 Victoria, B.C.   
 
 
+_**ATTENTION**_  
 Our Friday, April 17th 2020  (9:30am to 11:30am) `<bcgov/code_together>` event is **cancelled**. Stay tuned for details on a fully remote `<bcgov/code_together>` event in May 2020!
 
 ### Upcoming Data Science Training Events
