@@ -1,0 +1,181 @@
+---
+title: 
+author: 
+date: 
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+---
+
+<!--
+Copyright 2020 Province of British Columbia
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.
+-->
+
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+
+library(readr)
+library(janitor)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(ggplot2)
+library(here)
+library(kableExtra)
+
+results <- read_csv(here::here("surveys/tmp/survey_results.csv"))
+
+participation <- results %>% count() %>% pull
+
+```
+
+# Data Science CoP March 2020 Survey: Results
+
+The Data Science CoP posted an online survey to gather community preferences and input for planning 2020 CoP activities. The survey was open for 3 weeks from March 4th to April 1st.
+
+### Participation
+
+ - `r  participation` community members completed the survey.
+
+### Events
+
+Support from survey participants varied in the types of events they would like to see the CoP host, however there was strong support for continued training events and reasonable interest in another data science demo day.
+
+```{r}
+events <- results %>% 
+  select(starts_with("please")) %>% 
+  pivot_longer(everything(), names_to = "question", values_to = "answer") %>% 
+  mutate(question = str_remove(question, "please_select_events_from_the_list_below_that_you_would_you_like_to_see_the_data_science_co_p_host_in_2020_"), 
+         question = recode(question, "co_p_member_led_data_science_learning_club_s" = "cop_member_led_data_science_learning_clubs"))
+
+
+events %>% 
+  filter(question != "other" & answer != "N/A") %>% 
+  group_by(question, answer) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(labels = str_replace_all(question, "_", " "),
+         labels2 = str_wrap(labels, 25)) %>% 
+  ggplot(aes(answer, n)) +
+  geom_col(fill = "#1f78b4", alpha = .7) +
+  facet_wrap(~ labels2) +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank()) +
+  labs(x = NULL, y = NULL)
+```
+
+
+Other events ideas included:
+
+```{r}
+
+events %>% 
+  filter(question == "other") %>% 
+  drop_na() %>% 
+  select(answer) %>% 
+  mutate(answer = str_c("- ", answer)) %>% 
+  pull() %>% 
+  kable(col.names = NULL)
+```
+
+
+### Training
+
+Support from survey participants was broadly similar for all the suggested training topics.
+
+```{r}
+what <- results %>% 
+  select(starts_with("what_type_of")) %>% 
+  pivot_longer(everything(), names_to = "question", values_to = "answer") %>% 
+  mutate(question = str_remove(question, "what_type_of_training_event_you_would_like_to_see_the_data_science_co_p_host_in_2020_")) 
+
+
+what %>% 
+  filter(question != "other" & answer != "N/A") %>% 
+  group_by(question, answer) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(labels = str_replace_all(question, "_", " "),
+         labels2 = str_wrap(labels, 30)) %>% 
+  ggplot(aes(answer, n)) +
+  geom_col(fill = "#1f78b4", alpha = .7) +
+  facet_wrap(vars(labels2)) +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank()) +
+  labs(x = NULL, y = NULL)
+```
+
+
+
+Other suggested training topics included:
+
+```{r}
+what %>% 
+  filter(question == "other") %>% 
+  drop_na() %>% 
+  select(answer) %>% 
+  mutate(answer = str_c("- ", answer)) %>% 
+  pull() %>% 
+  kable(col.names = NULL)
+```
+
+### Computing Languages
+
+So much in-house bcgov capacity in computer programming languages!
+
+```{r}
+results %>% 
+  select(starts_with("what_programming_languages")) %>%
+  rename("answer" = starts_with("what_programming_languages")) %>% 
+  drop_na() %>%
+  mutate(answer = str_c("- ", answer)) %>% 
+  pull() %>% 
+  kable(col.names = NULL)
+```
+
+
+### Other Suggested Topics
+
+Many other great topics were suggested by survey participants:
+
+```{r}
+results %>% 
+  select(starts_with("are_there_any_other_specific")) %>%
+  rename("answer" = starts_with("are_there_any_other_specific")) %>% 
+  drop_na() %>% 
+  mutate(answer = str_c("- ", answer)) %>% 
+  pull() %>% 
+  kable(col.names = NULL)
+
+```
+
+
+### General Suggesteds
+
+Many, many great suggestions:
+
+```{r}
+
+results %>% 
+  select(starts_with("do_you_have_any_additional_suggestions")) %>%
+  rename("answer" = starts_with("do_you_have_any_additional_suggestions")) %>% 
+  drop_na() %>% 
+  mutate(answer = str_c("- ", answer)) %>% 
+  pull() %>% 
+  kable(col.names = NULL)
+```
