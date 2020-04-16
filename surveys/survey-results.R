@@ -19,6 +19,7 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 library(ggplot2)
+library(here)
 
 # Variables --------------------------------------------------------------------
 
@@ -39,8 +40,8 @@ lanpath
 #                     col_types = c("cccccccccccccccccccccccccc")) %>% 
 #            clean_names()
 # 
-# write_csv(results, "tmp/survey_results.csv")
-results <- read_csv("tmp/survey_results.csv")
+# write_csv(results, "surveys/tmp/survey_results.csv")
+results <- read_csv(here::here("surveys/tmp/survey_results.csv"))
 
 
 # Munging ----------------------------------------------------------------------
@@ -51,16 +52,23 @@ participation <- results %>% count()
 events <- results %>% 
   select(starts_with("please")) %>% 
   pivot_longer(everything(), names_to = "question", values_to = "answer") %>% 
-  mutate(question = str_remove(question, "please_select_events_from_the_list_below_that_you_would_you_like_to_see_the_data_science_co_p_host_in_2020_")) 
+  mutate(question = str_remove(question, "please_select_events_from_the_list_below_that_you_would_you_like_to_see_the_data_science_co_p_host_in_2020_"), 
+         question = recode(question, "co_p_member_led_data_science_learning_club_s" = "cop_member_led_data_science_learning_clubs"))
 
 
 events %>% 
-  filter(question != "other") %>% 
+  filter(question != "other" & answer != "N/A") %>% 
   group_by(question, answer) %>% 
   count() %>% 
+  ungroup() %>% 
+  mutate(labels = str_replace_all(question, "_", " "),
+         labels2 = str_wrap(labels, 25)) %>% 
   ggplot(aes(answer, n)) +
-  geom_col() +
-  facet_wrap(vars(question))
+  geom_col(fill = "#1f78b4", alpha = .7) +
+  facet_wrap(~ labels2) +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank()) +
+  labs(x = NULL, y = NULL)
 
 
 events %>% 
@@ -102,6 +110,5 @@ suggestions <- results %>%
   select(starts_with("do_you_have_any_additional_suggestions")) %>%
   drop_na()
   
-
 
 
