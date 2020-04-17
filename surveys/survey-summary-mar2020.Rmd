@@ -8,7 +8,8 @@ output:
     df_print: paged
     toc: yes
     toc_depth: 6
-    toc_float: yes
+    toc_float: 
+      collapsed: false
 ---
 
 <!--
@@ -44,7 +45,7 @@ participation <- results %>% count() %>% pull
 
 ```
 
-# Data Science CoP March 2020 Survey: Results
+# Data Science CoP March 2020 Survey Results
 
 The Data Science CoP posted an online survey to gather community preferences and input for planning 2020 CoP activities. The survey was open for 3 weeks from March 4th to April 1st.
 
@@ -54,7 +55,7 @@ The Data Science CoP posted an online survey to gather community preferences and
 
 ### Events
 
-Support from survey participants varied in the types of events they would like to see the CoP host, however there was strong support for continued training events and reasonable interest in another data science demo day.
+Support from survey participants varied in the types of events they would like to see the CoP host, however there was strongest support for continued training events and another data science demo day.
 
 ```{r}
 events <- results %>% 
@@ -80,7 +81,7 @@ events %>%
 ```
 
 
-Other events ideas included:
+Other event ideas suggested included:
 
 ```{r}
 
@@ -165,7 +166,7 @@ results %>%
 ```
 
 
-### General Suggesteds
+### General Suggestions
 
 Many, many great suggestions:
 
