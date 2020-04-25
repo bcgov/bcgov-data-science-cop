@@ -56,7 +56,7 @@ events <- results %>%
          question = recode(question, "co_p_member_led_data_science_learning_club_s" = "cop_member_led_data_science_learning_clubs"))
 
 
-events %>% 
+events_plot <- events %>% 
   filter(question != "other" & answer != "N/A") %>% 
   group_by(question, answer) %>% 
   count() %>% 
@@ -67,8 +67,14 @@ events %>%
   geom_col(fill = "#1f78b4", alpha = .7) +
   facet_wrap(~ labels2) +
   theme_minimal() +
-  theme(panel.grid.major.x = element_blank()) +
-  labs(x = NULL, y = NULL)
+  theme(panel.grid.major.x = element_blank(),
+        plot.title = element_text(size = 14),
+        axis.text = element_text(size = 10),
+        strip.text = element_text(size = 12)) +
+  labs(x = NULL, y = NULL,
+       title = "What Events Would You Like to See the Data Science Community of Practice Host?")
+
+ggsave("surveys/tmp/events_plot.jpg", events_plot)
 
 
 events %>% 
@@ -82,13 +88,25 @@ what <- results %>%
   mutate(question = str_remove(question, "what_type_of_training_event_you_would_like_to_see_the_data_science_co_p_host_in_2020_")) 
 
 
-what %>% 
-  filter(question != "other") %>% 
+what_plot <- what %>% 
+  filter(question != "other" & answer != "N/A") %>% 
   group_by(question, answer) %>% 
   count() %>% 
+  ungroup() %>% 
+  mutate(labels = str_replace_all(question, "_", " "),
+         labels2 = str_wrap(labels, 30)) %>% 
   ggplot(aes(answer, n)) +
-  geom_col() +
-  facet_wrap(vars(question))
+  geom_col(fill = "#1f78b4", alpha = .7) +
+  facet_wrap(vars(labels2)) +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank(),
+         plot.title = element_text(size = 14),
+         axis.text = element_text(size = 10),
+        strip.text = element_text(size = 12)) +
+  labs(x = NULL, y = NULL,
+       title = "What Types of Training Would You Like to See the Data Science Community of Practice Host?")
+
+ggsave("surveys/tmp/what_plot.jpg", what_plot)
 
 
 what %>% 
