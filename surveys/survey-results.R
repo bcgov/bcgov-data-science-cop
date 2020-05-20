@@ -23,15 +23,15 @@ library(here)
 
 # Variables --------------------------------------------------------------------
 
-# if(.Platform$OS.type == "windows"){
+if(.Platform$OS.type == "windows"){
 lanpath
-# }
-# 
-# ## Note: the file share must be mounted on your local filesystem
-# if(.Platform$OS.type == "unix"){
-#   ## Macbook path
+}
+
+## Note: the file share must be mounted on your local filesystem
+if(.Platform$OS.type == "unix"){
+  ## Macbook path
 lanpath
-# }
+}
 
 
 # Load -------------------------------------------------------------------------
