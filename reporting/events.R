@@ -53,13 +53,18 @@ num_events <- event_part %>%
   filter(cop_event_date < today()) %>% 
   count()
   
+
 #number of cop participants
-num_part <- event_part %>%
+part_count <- event_part %>%
   filter(cop_event_date < today()) %>%
-  select(in_person_participants, on_line_participants) %>%
-  mutate(on_line_participants = replace_na(on_line_participants, 0)) %>%
-  mutate(participants = in_person_participants + on_line_participants) %>%
+  select(event_type, in_person_participants, on_line_participants) %>%
+  mutate(on_line_participants = replace_na(on_line_participants, 0),
+         in_person_participants = replace_na(in_person_participants, 0)) %>%
+  mutate(participants = in_person_participants + on_line_participants) 
+
+num_part <- part_count %>%
   summarise(sum(participants))
+
 
 #number of training events
 num_train_events <- event_part %>%
@@ -67,11 +72,12 @@ num_train_events <- event_part %>%
          event_type == "training") %>% 
   count()
 
+
 #number of overall training participants (all in-person)
-num_trained <- event_part %>%
-  filter(cop_event_date < today(),
-         event_type == "training") %>%
-  summarise(sum(in_person_participants))
+num_trained <- part_count %>%
+  filter(event_type == "training") %>%
+  summarise(sum(participants))
+
 
 #average waitlist
 event_part %>%
@@ -80,10 +86,12 @@ event_part %>%
          event_type == "training") %>%
   summarise(mean(waitlist, na.rm = TRUE))
 
+
 #number of Ministries
 part_by_min %>% 
   distinct(ministry) %>% 
   count()
+
 
 #number of part by Ministry
 num_by_min <- part_by_min %>% 
@@ -134,7 +142,7 @@ summary_slide <- read_pptx()  %>%
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
   ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "Includes August 2018 - March 2020 Events", location = ph_location_type(type = "ftr")) 
+  ph_with(value = "Includes August 2018 - May 2020 Events", location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
