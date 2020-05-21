@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 
-# Libraries --------------------------------------------------------------------
+## Libraries -------------------------------------------------------------------
 
 library(readr)
 library(janitor)
@@ -24,7 +24,7 @@ library(RColorBrewer)
 library(officer)
 
 
-# Variables --------------------------------------------------------------------
+## Variables -------------------------------------------------------------------
 
 if(.Platform$OS.type == "windows"){
   lan_data_dir <- "//SFP.idir.bcgov/S177/S7792/Operations/Data Science and Analytics/7. Data Science CoP"
@@ -37,7 +37,7 @@ if(.Platform$OS.type == "unix"){
 }
 
 
-# Load -------------------------------------------------------------------------
+## Load ------------------------------------------------------------------------
 
 event_part <- read_csv(file.path(lan_data_dir, "cop-data-events.csv"), col_types = c("ccddDccdc")) %>% 
   clean_names()
@@ -46,7 +46,7 @@ part_by_min <- read_csv(file.path(lan_data_dir, "cop-data-part-ministries.csv"),
   clean_names()
 
 
-# Munging ----------------------------------------------------------------------
+## Munging ---------------------------------------------------------------------
 
 #number of cop events
 num_events <- event_part %>% 
@@ -57,13 +57,24 @@ num_events <- event_part %>%
 #number of cop participants
 part_count <- event_part %>%
   filter(cop_event_date < today()) %>%
-  select(event_type, in_person_participants, on_line_participants) %>%
+  select(cop_event_date, event_type, in_person_participants, on_line_participants) %>%
   mutate(on_line_participants = replace_na(on_line_participants, 0),
          in_person_participants = replace_na(in_person_participants, 0)) %>%
   mutate(participants = in_person_participants + on_line_participants) 
 
 num_part <- part_count %>%
   summarise(sum(participants))
+
+
+#cumulative number of participants over time
+cumulative_part <- part_count %>% 
+  arrange(cop_event_date) %>% 
+  mutate(cumsum_part = cumsum(participants))
+
+cumulative_trained <- part_count %>% 
+  filter(event_type == "training") %>% 
+  arrange(cop_event_date) %>% 
+  mutate(cumsum_trained = cumsum(participants))
 
 
 #number of training events
@@ -99,10 +110,19 @@ num_by_min <- part_by_min %>%
   sum()
 
 
-# Plotting ---------------------------------------------------------------------
+#future goals
+future <- tribble(
+  ~date, ~cumsum_part, ~cumsum_trained,
+  "2020-05-15", 412, 223,
+  "2020-12-31", 500, 300
+)
+  
+
+## Plotting --------------------------------------------------------------------
 
 colourCount <-  length(unique(part_by_min$ministry))
 getPalette <-  colorRampPalette(brewer.pal(9, "Set1"))
+
 
 #waffle plot of Min participation in all events
 waffle_plot <- part_by_min %>% 
@@ -122,15 +142,77 @@ waffle_plot <- part_by_min %>%
   guides(fill=guide_legend(ncol = 2, bycol = TRUE))
 
 
-## save waffle chart as png
+#save waffle chart as png
 ggsave("reporting/cop-report-waffle.png", 
        waffle_plot,
        width = 18,
        height = 9)
 
 
-# Outputs ----------------------------------------------------------------------
+#line plot of cumulative participation over time + goals
+cumulative_plot <- ggplot() +
+  geom_rect(aes(xmin = as_date("2020-01-01"),
+                xmax = as_date("2020-12-31"),
+                ymin = 0, ymax = Inf),
+            alpha = 0.3, fill = "grey70") +
+  geom_line(data = cumulative_part,
+            mapping = aes(cop_event_date, cumsum_part),
+            colour = "#0c2c84", size = 1.5) +
+  geom_line(data = future,
+            mapping = aes(as_date(date), cumsum_part),
+            colour = "#0c2c84", linetype = "dashed", size = 1.5) +
+  geom_line(data = cumulative_trained,
+            mapping = aes(cop_event_date, cumsum_trained),
+            colour = "#1d91c0", size = 1.5) +
+   geom_line(data = future,
+            mapping = aes(as_date(date), cumsum_trained),
+            colour = "#1d91c0", linetype = "dashed", size = 1.5) +
+  annotate("text",
+           label = "All Events",
+           x = as_date("2019-11-01"), y = 360,
+           colour = "#0c2c84", size = 8) +
+  annotate("text",
+           label = "Training Events",
+           x = as_date("2019-09-21"), y = 213,
+           colour = "#1d91c0", size = 8) +
+   annotate("text",
+           label = "2020 CoP Goals",
+           x = as_date("2020-06-20"), y = 485,
+           colour = "#99000d",
+           fontface = "bold", size = 9) +
+     annotate("text",
+           label = "Actuals—Solid Lines\nTargets—Dotted Lines",
+           x = as_date("2020-07-01"), y = 50,
+           colour = "grey50",
+           size = 6) +
+  labs(x = NULL, y = NULL,
+       title = "Staff Participation in Data Science CoP\n") +
+  scale_x_date(date_breaks = "4 month",
+               date_labels = "%b %y") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_minimal() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.line = element_line(),
+        plot.title = element_text(hjust = -.12,
+                                  face = "bold",
+                                  size = 26,
+                                  colour = "grey30"),
+        axis.text = element_text(size = 18))
+     as_date("2020-12-31")
+   
+     
+#save line chart as png
+ggsave("reporting/cop-participation.png", 
+       cumulative_plot,
+       width = 11,
+       height = 9)
 
+
+
+## Outputs ---------------------------------------------------------------------
+
+#pptx reporting slide
 top_text <- fpar(
     ftext("Data Science CoP Summary\n", prop = fp_text(bold = FALSE, font.size = 40)),
     ftext(paste0(num_events, " events, including ", num_train_events,
