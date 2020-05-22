@@ -1,0 +1,264 @@
+---
+title: "CoP Dashboard"
+author: "Stephanie Hazlitt"
+date: "21/05/2020"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+## Load Libraries --------------------------------------------------------------
+library(readr)
+library(janitor)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+## Set Paths -------------------------------------------------------------------
+if(.Platform$OS.type == "windows"){
+lanpath
+}
+
+## Note: the file share must be mounted on your local filesystem
+if(.Platform$OS.type == "unix"){
+  ## Macbook path
+lanpath
+}
+
+
+## Load Data -------------------------------------------------------------------
+event_participation <-
+  read_csv(file.path(lan_data_dir, "cop-data-events.csv"),
+           col_types = c("ccddDccdc")) %>%
+  clean_names()
+
+participation_by_min <-
+  read_csv(file.path(lan_data_dir, "cop-data-part-ministries.csv"),
+           col_types = c("cDdcc")) %>%
+  clean_names()
+```
+
+
+
+
+```{r munging}
+#number of cop participants by year
+participation_count <- event_participation %>%
+  filter(date < today()) %>%
+  select(date, event_type, in_person_participants, on_line_participants) %>%
+  mutate(on_line_participants = replace_na(on_line_participants, 0),
+         in_person_participants = replace_na(in_person_participants, 0)) %>%
+  mutate(participants = in_person_participants + on_line_participants) 
+```
+
+
+```{r count-by-year}
+participation_sum <- participation_count %>%
+  mutate(year = year(date)) %>% 
+  mutate(event_type = recode(event_type, social = "meet-up")) %>% 
+  group_by(year, event_type) %>% 
+  summarise(total_part = sum(participants),
+            total_event = length(event_type)) 
+
+
+event_sum <- participation_sum %>% 
+  group_by(year) %>% 
+  summarise(num_events = sum(total_event),
+            total_part = sum(total_part))
+
+
+summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
+  geom_rect(
+    aes(
+      xmin = 2020 - 0.45,
+      xmax = 2020 + 0.45,
+      ymin = 0,
+      ymax = 400
+    ),
+    alpha = 0.1,
+    fill = "grey90"
+  ) +
+  geom_col(aes(fill = event_type), alpha = 0.6) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Attendance at Data Science CoP Events",
+    subtitle = "CoP launched August 2018\n"
+  ) +
+  geom_text(aes(x = 2020, y = 390,
+                label = "2020 Attendance Goal"),
+            size = 6, colour = "grey30", fontface = "bold") +
+  geom_text(data = event_sum,
+            aes(year, total_part,
+                label = paste0(num_events, " events")),
+            nudge_y = 8, colour = "grey30", size = 5) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 400),
+                     breaks = seq(0, 400, 50)) +
+  scale_fill_manual(name = NULL,
+                    values = c("meet-up" = "#edf8b1",
+                               "webinar" = "#7fcdbb",
+                               "training" = "#2c7fb8")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    plot.title = element_text(
+      hjust = -.14,
+      face = "bold",
+      size = 26,
+      colour = "grey30"
+    ),
+    plot.subtitle = element_text(
+       hjust = -.06,
+      face = "italic",
+      size = 14,
+      colour = "grey30"
+    ),
+    axis.text = element_text(size = 18),
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 16))
+summary_plot 
+
+
+#save bar chart as png
+ggsave(here::here("reporting/out/cop-participation-summary.png"), 
+       summary_plot ,
+       width = 11,
+       height = 9)
+
+```
+
+
+
+```{r cumsum}
+
+#cumulative number of participants over time
+cumulative_participation <- participation_count %>% 
+  arrange(date) %>% 
+  mutate(cumsum_part = cumsum(participants))
+
+
+#cumulative number of trainees over time
+cumulative_trained <- participation_count %>% 
+  filter(event_type == "training") %>% 
+  arrange(date) %>% 
+  mutate(cumsum_trained = cumsum(participants))
+
+
+#future attendance goal
+future <- tribble(
+  ~date, ~cumsum_part, ~cumsum_trained,
+  "2020-05-15", 573, 223,
+  "2020-12-31", 700, 300
+)
+
+
+## line plot of cumulative participation over time + goals
+cumulative_plot <- ggplot() +
+  geom_rect(
+    aes(
+      xmin = as_date("2020-01-01"),
+      xmax = as_date("2020-12-31"),
+      ymin = 0,
+      ymax = Inf
+    ),
+    alpha = 0.3,
+    fill = "grey70"
+  ) +
+  geom_line(
+    data = cumulative_participation,
+    mapping = aes(date, cumsum_part),
+    colour = "#0c2c84",
+    size = 1.5
+  ) +
+  geom_line(
+    data = future,
+    mapping = aes(as_date(date), cumsum_part),
+    colour = "#0c2c84",
+    linetype = "dashed",
+    size = 1.5
+  ) +
+  geom_line(
+    data = cumulative_trained,
+    mapping = aes(date, cumsum_trained),
+    colour = "#1d91c0",
+    size = 1.5
+  ) +
+  geom_line(
+    data = future,
+    mapping = aes(as_date(date), cumsum_trained),
+    colour = "#1d91c0",
+    linetype = "dashed",
+    size = 1.5
+  ) +
+  annotate(
+    "text",
+    label = "All Events",
+    x = as_date("2019-07-01"),
+    y = 270,
+    colour = "#0c2c84",
+    size = 8
+  ) +
+  annotate(
+    "text",
+    label = "Training Events",
+    x = as_date("2019-08-10"),
+    y = 110,
+    colour = "#1d91c0",
+    size = 8
+  ) +
+  annotate(
+    "text",
+    label = "Attendance Goal",
+    x = as_date("2020-06-20"),
+    y = 680,
+    colour = "#99000d",
+    fontface = "bold",
+    size = 9
+  ) +
+  annotate(
+    "text",
+    label = "Attended—Solid\nAttendance Goal—Dotted",
+    x = as_date("2020-07-01"),
+    y = 50,
+    colour = "grey50",
+    size = 6
+  ) +
+  labs(x = NULL, y = NULL,
+       title = "Increasing Employee Participation in the Data Science CoP\n") +
+  scale_x_date(date_breaks = "4 month",
+               date_labels = "%b %y") +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    plot.title = element_text(
+      hjust = -2,
+      face = "bold",
+      size = 26,
+      colour = "grey30"
+    ),
+    axis.text = element_text(size = 18)
+  )
+cumulative_plot
+
+#save line chart as png
+ggsave(here::here("reporting/out/cop-cumulative-participation.png"), 
+       cumulative_plot,
+       width = 11,
+       height = 9)
+```
+
+
+```{r outputs}
+
+```
+
