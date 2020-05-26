@@ -27,13 +27,13 @@ library(officer)
 ## Variables -------------------------------------------------------------------
 
 if(.Platform$OS.type == "windows"){
-  lan_data_dir <- "//SFP.idir.bcgov/S177/S7792/Operations/Data Science and Analytics/7. Data Science CoP"
+  lan_data_dir <- "//SFP.idir.bcgov/S177/S7792/Operations/Data Science and Analytics/7. Data Science CoP/data"
 }
 
 ## Note: the file share must be mounted on your local filesystem
 if(.Platform$OS.type == "unix"){
   ## Macbook path
-  lan_data_dir <- "/Volumes/Operations/Data Science and Analytics/7. Data Science CoP"
+  lan_data_dir <- "/Volumes/Operations/Data Science and Analytics/7. Data Science CoP/data"
 }
 
 
