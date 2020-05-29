@@ -1,0 +1,72 @@
+---
+title: "Data Science CoP"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+## libraries
+library(flexdashboard)
+library(readr)
+library(janitor)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+## paths
+if(.Platform$OS.type == "windows"){
+  lan_data_dir <- "//SFP.idir.bcgov/S177/S7792/Operations/Data Science and Analytics/7. Data Science CoP/data"
+}
+
+## Note: the file share must be mounted on your local filesystem
+if(.Platform$OS.type == "unix"){
+  ## Macbook path
+  lan_data_dir <- "/Volumes/Operations/Data Science and Analytics/7. Data Science CoP/data"
+}
+
+
+## load data
+event_participation <-
+  read_csv(file.path(lan_data_dir, "cop-data-events.csv"),
+           col_types = c("ccddDccdc")) %>%
+  clean_names()
+
+participation_by_min <-
+  read_csv(file.path(lan_data_dir, "cop-data-part-ministries.csv"),
+           col_types = c("cDdcc")) %>%
+  clean_names()
+
+event_feedback <-  read_csv(file.path(lan_data_dir, "cop-training-survey-feedback.csv"),
+           col_types = c("ccdDccddddddddddddcc")) %>%
+  clean_names()
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
