@@ -318,4 +318,7 @@ About
 
 The Data Science Community of Practice (CoP) was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate and learn about all things data science. The community exists online&mdash;and sometimes offline&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.
 
+![Data Science CoP Logo](data/cop-logo-updated.png)
+
+
 Learn about past Data Science Community of Practice events and find useful resources [here](https://github.com/bcgov/bcgov-data-science-cop).
