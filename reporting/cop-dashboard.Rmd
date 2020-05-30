@@ -1,9 +1,9 @@
 ---
-title: "Data Science CoP"
+title: "Data Science Community of Practice"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
     vertical_layout: fill
+    source_code: https://github.com/bcgov/bcgov-data-science-cop
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +15,8 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-
+library(waffle)
+library(RColorBrewer)
 
 ## paths
 if(.Platform$OS.type == "windows"){
@@ -35,38 +36,248 @@ event_participation <-
            col_types = c("ccddDccdc")) %>%
   clean_names()
 
-participation_by_min <-
+participation_by_ministry <-
   read_csv(file.path(lan_data_dir, "cop-data-part-ministries.csv"),
            col_types = c("cDdcc")) %>%
   clean_names()
 
-event_feedback <-  read_csv(file.path(lan_data_dir, "cop-training-survey-feedback.csv"),
+workshop_feedback <-  read_csv(file.path(lan_data_dir, "cop-training-survey-feedback.csv"),
            col_types = c("ccdDccddddddddddddcc")) %>%
   clean_names()
-
 ```
 
-Column {data-width=650}
+
+Participation
+======================================================================
+
+Column {data-width=150}
 -----------------------------------------------------------------------
 
-### Chart A
+### Number of Events (All Time) {.value-box}
 
 ```{r}
+#number of cop events
+num_cop_events <- event_participation %>% 
+  count()
 
+valueBox(value = num_cop_events, icon = "fa-calendar")
 ```
 
-Column {data-width=350}
+
+### Total Attendance (All Time) {.value-box}
+
+```{r}
+#cumulative event attendance
+participation_count <- event_participation %>%
+  filter(date < today()) %>%
+  select(date, event_type, in_person_participants, on_line_participants) %>%
+  mutate(on_line_participants = replace_na(on_line_participants, 0),
+         in_person_participants = replace_na(in_person_participants, 0)) %>%
+  mutate(participants = in_person_participants + on_line_participants) 
+
+total_attendance <- participation_count %>% 
+  summarise(sum(participants))
+
+valueBox(value = total_attendance, icon = "fa-users")
+```
+
+
+### Number of Ministries Represented (All Time) {.value-box}
+
+```{r}
+#number of ministries
+num_ministries <- participation_by_ministry %>% 
+  distinct(ministry) %>% 
+  count()
+ 
+valueBox(value = num_ministries, icon = "fa-address-book")
+```
+
+
+Column{data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Events by Year
 
 ```{r}
+#number of events by year and event type
+event_sum <- participation_count %>%
+  mutate(year = year(date)) %>% 
+  mutate(event_type = recode(event_type, social = "meet-up")) %>% 
+  group_by(year, event_type) %>% 
+  count()
+
+#bar chart of number of events
+event_summary_plot <- ggplot(data = event_sum, aes(year, n)) +
+  geom_rect(
+    aes(
+      xmin = 2020 - 0.45,
+      xmax = 2020 + 0.45,
+      ymin = 0,
+      ymax = 15
+    ),
+    alpha = 0.1,
+    fill = "grey90"
+  ) +
+  geom_col(aes(fill = event_type), alpha = 0.6) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  geom_text(aes(x = 2020, y = 14.4,
+                label = "2020 Goal"),
+            size = 4, colour = "grey20") +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 15),
+                     breaks = seq(0, 15, 3)) +
+  scale_fill_manual(name = NULL,
+                    values = c("meet-up" = "#edf8b1",
+                               "webinar" = "#7fcdbb",
+                               "training" = "#2c7fb8")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    axis.text = element_text(size = 14),
+    legend.position = "top",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 14))
+event_summary_plot 
 
 ```
 
-### Chart C
+
+
+
+### Event Attendance by Year
 
 ```{r}
+#participation by year and event
+participation_sum <- participation_count %>%
+  mutate(year = year(date)) %>% 
+  mutate(event_type = recode(event_type, social = "meet-up")) %>% 
+  group_by(year, event_type) %>% 
+  summarise(total_part = sum(participants),
+            total_event = length(event_type)) 
 
+event_sum <- participation_sum %>% 
+  group_by(year) %>% 
+  summarise(num_events = sum(total_event),
+            total_part = sum(total_part))
+
+summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
+  geom_rect(
+    aes(
+      xmin = 2020 - 0.45,
+      xmax = 2020 + 0.45,
+      ymin = 0,
+      ymax = 400
+    ),
+    alpha = 0.1,
+    fill = "grey90"
+  ) +
+  geom_col(aes(fill = event_type), alpha = 0.6) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  geom_text(aes(x = 2020, y = 385,
+                label = "2020 Goal"),
+            size = 4, colour = "grey20") +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 400),
+                     breaks = seq(0, 400, 50)) +
+  scale_fill_manual(name = NULL,
+                    values = c("meet-up" = "#edf8b1",
+                               "webinar" = "#7fcdbb",
+                               "training" = "#2c7fb8")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    axis.text = element_text(size = 14),
+    legend.position = "top",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 14))
+summary_plot 
 ```
 
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Attendance by Ministry
+
+```{r}
+#number of participants by Ministry
+num_by_min <- participation_by_ministry %>% 
+  select(number_participants) %>% 
+  sum()
+
+#colour palette
+colourCount <-  length(unique(participation_by_ministry$ministry))
+getPalette <-  colorRampPalette(brewer.pal(9, "Paired"))
+
+#waffle plot
+waffle_plot <- participation_by_ministry %>%
+  group_by(ministry) %>%
+  summarise(count = sum(number_participants)) %>%
+  ggplot(aes(fill = ministry, values = count)) +
+  geom_waffle(n_rows = 7) +
+  scale_fill_manual(values = getPalette(colourCount), name = NULL) +
+  coord_equal() +
+  # labs(
+  #   title = "CoP Participation by Ministry",
+  #   caption = paste0(
+  #     "(based on ",
+  #     num_by_min,
+  #     " participants who provided organization information)"
+  #   )
+  # ) +
+  theme_enhance_waffle() +
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 7),
+    plot.title = element_text(hjust = .07, face = "bold"),
+    plot.subtitle = element_text(hjust = .07, face = "italic", size = 8)
+  ) +
+  guides(fill = guide_legend(ncol = 2, bycol = TRUE))
+waffle_plot
+```
+
+
+
+Training Events
+======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Data Science Workshops Taught (All Time) {.value-box}
+
+```{r}
+num_events <- event_participation %>% 
+  filter(event_type == "training") %>% 
+  count()
+
+valueBox(value = num_events, icon = "fa-calendar")
+```
+
+### Total Workshop Attendees (All Time) {.value-box}
+
+```{r}
+num_trainees <- workshop_feedback %>% 
+  summarise(sum(number_participants))
+
+valueBox(value = num_trainees, icon = "fa-users")
+```
+
+About
+======================================================================
+
+The Data Science Community of Practice (CoP) was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate and learn about all things data science. The community exists online&mdash;and sometimes offline&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.
+
+Learn about past Data Science Community of Practice events and find useful resources [here](https://github.com/bcgov/bcgov-data-science-cop).
