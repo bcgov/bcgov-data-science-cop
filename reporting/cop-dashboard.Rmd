@@ -2,6 +2,7 @@
 title: "Data Science Community of Practice"
 output: 
   flexdashboard::flex_dashboard:
+    orientation: rows
     vertical_layout: fill
     source_code: https://github.com/bcgov/bcgov-data-science-cop
 ---
@@ -18,17 +19,19 @@ library(ggplot2)
 library(waffle)
 library(RColorBrewer)
 
-## paths
-if(.Platform$OS.type == "windows"){
-  lan_data_dir <- "//SFP.idir.bcgov/S177/S7792/Operations/Data Science and Analytics/7. Data Science CoP/data"
-}
+## paths LAN
+# if(.Platform$OS.type == "windows"){
+#   lan_data_dir <- "//SFP.idir.bcgov/S177/S7792/Operations/Data Science and Analytics/7. Data Science CoP/data"
+# }
+# 
+# ## Note: the file share must be mounted on your local filesystem
+# if(.Platform$OS.type == "unix"){
+#   ## Macbook path
+#   lan_data_dir <- "/Volumes/Operations/Data Science and Analytics/7. Data Science CoP/data"
+# }
 
-## Note: the file share must be mounted on your local filesystem
-if(.Platform$OS.type == "unix"){
-  ## Macbook path
-  lan_data_dir <- "/Volumes/Operations/Data Science and Analytics/7. Data Science CoP/data"
-}
-
+## path no LAN
+lan_data_dir <- paste0(here::here(), "/reporting/data")
 
 ## load data
 event_participation <-
@@ -44,13 +47,20 @@ participation_by_ministry <-
 workshop_feedback <-  read_csv(file.path(lan_data_dir, "cop-training-survey-feedback.csv"),
            col_types = c("ccdDccddddddddddddcc")) %>%
   clean_names()
+
+participation_count <- event_participation %>%
+  filter(date < today()) %>%
+  select(date, event_type, in_person_participants, on_line_participants) %>%
+  mutate(on_line_participants = replace_na(on_line_participants, 0),
+         in_person_participants = replace_na(in_person_participants, 0)) %>%
+  mutate(participants = in_person_participants + on_line_participants) 
 ```
 
 
 Participation
 ======================================================================
 
-Column {data-width=150}
+Row 
 -----------------------------------------------------------------------
 
 ### Number of Events (All Time) {.value-box}
@@ -68,19 +78,24 @@ valueBox(value = num_cop_events, icon = "fa-calendar")
 
 ```{r}
 #cumulative event attendance
-participation_count <- event_participation %>%
-  filter(date < today()) %>%
-  select(date, event_type, in_person_participants, on_line_participants) %>%
-  mutate(on_line_participants = replace_na(on_line_participants, 0),
-         in_person_participants = replace_na(in_person_participants, 0)) %>%
-  mutate(participants = in_person_participants + on_line_participants) 
-
 total_attendance <- participation_count %>% 
   summarise(sum(participants))
 
 valueBox(value = total_attendance, icon = "fa-users")
 ```
 
+
+### Geographic Locations {.value-box}
+
+```{r}
+#number of locations
+num_locations <- event_participation %>% 
+  distinct(location) %>% 
+  filter(location != "remote") %>% 
+  count()
+ 
+valueBox(value = num_locations, icon = "fa-globe")
+```
 
 ### Number of Ministries Represented (All Time) {.value-box}
 
@@ -90,14 +105,14 @@ num_ministries <- participation_by_ministry %>%
   distinct(ministry) %>% 
   count()
  
-valueBox(value = num_ministries, icon = "fa-address-book")
+valueBox(value = num_ministries, icon = "fa-building")
 ```
 
 
-Column{data-width=350}
+Row 
 -----------------------------------------------------------------------
 
-### Events by Year
+### Number of Events by Year
 
 ```{r}
 #number of events by year and event type
@@ -131,9 +146,9 @@ event_summary_plot <- ggplot(data = event_sum, aes(year, n)) +
                      limits = c(0, 15),
                      breaks = seq(0, 15, 3)) +
   scale_fill_manual(name = NULL,
-                    values = c("meet-up" = "#edf8b1",
-                               "webinar" = "#7fcdbb",
-                               "training" = "#2c7fb8")) +
+                    values = c("meet-up" = "#b2df8a",
+                               "webinar" = "#fdbf6f",
+                               "training" = "#1f78b4")) +
   theme_minimal() +
   theme(
     panel.grid.major.x = element_blank(),
@@ -144,11 +159,37 @@ event_summary_plot <- ggplot(data = event_sum, aes(year, n)) +
     legend.direction = "horizontal",
     legend.text = element_text(size = 14))
 event_summary_plot 
-
 ```
 
 
+### Locations of In-Person Events
 
+```{r}
+cities <- bcmaps::bc_cities(class = "sf") %>% 
+  filter(NAME %in% c("Vancouver", "Victoria", "Prince George"))
+
+event_locations <- event_participation %>% 
+  select(location) %>% 
+  group_by(location) %>% 
+  count() %>% 
+  ungroup() %>% 
+  left_join(cities, by = c("location" = "NAME")) %>% 
+  sf::st_as_sf()
+
+  ggplot(data = event_locations) +
+  geom_sf(data = bcmaps::bc_bound(class= "sf"), fill = "white") +
+  geom_sf(colour = "#ff7f00", size = 4) +
+  geom_sf_text(aes(label = location),
+               vjust = 1.8, hjust = -.01,
+               size = 4, colour = "#1f78b4") +
+  # coord_sf(datum = NA) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+Row
+-----------------------------------------------------------------------
 
 ### Event Attendance by Year
 
@@ -189,9 +230,9 @@ summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
                      limits = c(0, 400),
                      breaks = seq(0, 400, 50)) +
   scale_fill_manual(name = NULL,
-                    values = c("meet-up" = "#edf8b1",
-                               "webinar" = "#7fcdbb",
-                               "training" = "#2c7fb8")) +
+                    values = c("meet-up" = "#b2df8a",
+                               "webinar" = "#fdbf6f",
+                               "training" = "#1f78b4")) +
   theme_minimal() +
   theme(
     panel.grid.major.x = element_blank(),
@@ -204,9 +245,6 @@ summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
 summary_plot 
 ```
 
-
-Column {data-width=500}
------------------------------------------------------------------------
 
 ### Attendance by Ministry
 
@@ -225,7 +263,7 @@ waffle_plot <- participation_by_ministry %>%
   group_by(ministry) %>%
   summarise(count = sum(number_participants)) %>%
   ggplot(aes(fill = ministry, values = count)) +
-  geom_waffle(n_rows = 7) +
+  geom_waffle(rows = 9) +
   scale_fill_manual(values = getPalette(colourCount), name = NULL) +
   coord_equal() +
   # labs(
@@ -240,13 +278,13 @@ waffle_plot <- participation_by_ministry %>%
   theme_void() +
   theme(
     legend.position = "bottom",
-    legend.text = element_text(size = 7),
-    plot.title = element_text(hjust = .07, face = "bold"),
-    plot.subtitle = element_text(hjust = .07, face = "italic", size = 8)
+    legend.text = element_text(size = 8),
+    plot.title = element_text(hjust = .07, face = "bold")
   ) +
   guides(fill = guide_legend(ncol = 2, bycol = TRUE))
 waffle_plot
 ```
+
 
 
 
