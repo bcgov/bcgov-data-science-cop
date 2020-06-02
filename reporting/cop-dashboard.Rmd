@@ -146,8 +146,8 @@ event_summary_plot <- ggplot(data = event_sum, aes(year, n)) +
                      limits = c(0, 15),
                      breaks = seq(0, 15, 3)) +
   scale_fill_manual(name = NULL,
-                    values = c("meet-up" = "#b2df8a",
-                               "webinar" = "#fdbf6f",
+                    values = c("meet-up" = "#33a02c",
+                               "webinar" = "#ff7f00",
                                "training" = "#1f78b4")) +
   theme_minimal() +
   theme(
@@ -174,14 +174,16 @@ event_locations <- event_participation %>%
   count() %>% 
   ungroup() %>% 
   left_join(cities, by = c("location" = "NAME")) %>% 
+  # mutate(location = recode(location, "Prince George" = "Prince\nGeorge")) %>% 
   sf::st_as_sf()
 
   ggplot(data = event_locations) +
-  geom_sf(data = bcmaps::bc_bound(class= "sf"), fill = "white") +
-  geom_sf(colour = "#ff7f00", size = 4) +
+  geom_sf(data = bcmaps::bc_bound(class = "sf"), fill = "white") +
+  geom_sf(colour = "grey30", size = 4) +
   geom_sf_text(aes(label = location),
                vjust = 1.8, hjust = -.01,
-               size = 4, colour = "#1f78b4") +
+               size = 4, colour = "grey20",
+               fontface = "bold") +
   # coord_sf(datum = NA) +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
@@ -230,8 +232,8 @@ summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
                      limits = c(0, 400),
                      breaks = seq(0, 400, 50)) +
   scale_fill_manual(name = NULL,
-                    values = c("meet-up" = "#b2df8a",
-                               "webinar" = "#fdbf6f",
+                    values = c("meet-up" = "#33a02c",
+                               "webinar" = "#ff7f00",
                                "training" = "#1f78b4")) +
   theme_minimal() +
   theme(
@@ -316,9 +318,16 @@ valueBox(value = num_trainees, icon = "fa-users")
 About
 ======================================================================
 
-The Data Science Community of Practice (CoP) was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate and learn about all things data science. The community exists online&mdash;and sometimes offline&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.
+Row {data-height=300}
+-----------------------------------------------------------------------
 
-![Data Science CoP Logo](data/cop-logo-updated.png)
+```{r, fig.width=3, fig.height=2}
+knitr::include_graphics("data/cop-logo-updated.png") 
+```
 
+The **Data Science Community of Practice (CoP)** was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate, share and learn about data science. The community exists online&mdash;and sometimes in-person&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.  
+&nbsp;\
+• **Join** the Data Science Community of Practice online in [bcgov Yammer](https://www.yammer.com/gov.bc.ca/#/threads/inGroup?type=in_group&feedId=5334748&view=all) and [MS Teams](https://teams.microsoft.com/l/team/19%3ab854478e8ff6436397e1cfa477422033%40thread.tacv2/conversations?groupId=a3bf276d-80e4-43c5-9387-3364248651ac&tenantId=6fdb5200-3d0d-4a8a-b036-d3685e359adc)  
+• **Read** blog posts about past & future Data Science Community of Practice events [here](https://gww.gov.bc.ca/groups/data-science-community-practice)   
+• **Find** Data Science Community of Practice materials & resources [here](https://github.com/bcgov/bcgov-data-science-cop)  
 
-Learn about past Data Science Community of Practice events and find useful resources [here](https://github.com/bcgov/bcgov-data-science-cop).
