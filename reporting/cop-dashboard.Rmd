@@ -48,30 +48,23 @@ participation_by_ministry <-
 workshop_feedback <-  read_csv(file.path(lan_data_dir, "cop-training-survey-feedback.csv"),
            col_types = c("ccdDccddddddddddddcc")) %>%
   clean_names()
-
-participation_count <- event_participation %>%
-  filter(date < today()) %>%
-  select(date, event_type, in_person_participants, on_line_participants) %>%
-  mutate(on_line_participants = replace_na(on_line_participants, 0),
-         in_person_participants = replace_na(in_person_participants, 0)) %>%
-  mutate(participants = in_person_participants + on_line_participants) 
 ```
 
 
 Participation
 ======================================================================
 
+
 Row 
 -----------------------------------------------------------------------
+
 
 ### Number of Events (All Time) {.value-box}
 
 ```{r}
 #number of cop events
-num_cop_events <- event_participation %>% 
-  count()
-
-valueBox(value = num_cop_events, icon = "fa-calendar")
+valueBox(value = event_participation %>% 
+  count(), icon = "fa-calendar")
 ```
 
 
@@ -79,10 +72,15 @@ valueBox(value = num_cop_events, icon = "fa-calendar")
 
 ```{r}
 #cumulative event attendance
-total_attendance <- participation_count %>% 
-  summarise(sum(participants))
+participation_count <- event_participation %>%
+  filter(date < today()) %>%
+  select(date, event_type, in_person_participants, on_line_participants) %>%
+  mutate(on_line_participants = replace_na(on_line_participants, 0),
+         in_person_participants = replace_na(in_person_participants, 0)) %>%
+  mutate(participants = in_person_participants + on_line_participants) 
 
-valueBox(value = total_attendance, icon = "fa-users")
+valueBox(value = participation_count %>% 
+  summarise(sum(participants)), icon = "fa-users")
 ```
 
 
@@ -98,20 +96,20 @@ num_locations <- event_participation %>%
 valueBox(value = num_locations, icon = "fa-globe")
 ```
 
+
 ### Number of Ministries Represented (All Time) {.value-box}
 
 ```{r}
 #number of ministries
-num_ministries <- participation_by_ministry %>% 
+valueBox(value = participation_by_ministry %>% 
   distinct(ministry) %>% 
-  count()
- 
-valueBox(value = num_ministries, icon = "fa-building")
+  count(), icon = "fa-building")
 ```
 
 
 Row 
 -----------------------------------------------------------------------
+
 
 ### Number of Events by Year
 
@@ -123,8 +121,23 @@ event_sum <- participation_count %>%
   group_by(year, event_type) %>% 
   count()
 
+#event colours
+event_colours = c("meet-up" = "#33a02c",
+                  "webinar" = "#ff7f00",
+                   "training" = "#1f78b4")
+
+#event bar chart theme
+theme_bar <- theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    axis.text = element_text(size = 11),
+    legend.position = "top",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 11))
+
 #bar chart of number of events
-event_summary_plot <- ggplot(data = event_sum, aes(year, n)) +
+ggplot(data = event_sum, aes(year, n)) +
   geom_rect(
     aes(
       xmin = 2020 - 0.45,
@@ -147,28 +160,20 @@ event_summary_plot <- ggplot(data = event_sum, aes(year, n)) +
                      limits = c(0, 15),
                      breaks = seq(0, 15, 3)) +
   scale_fill_manual(name = NULL,
-                    values = c("meet-up" = "#33a02c",
-                               "webinar" = "#ff7f00",
-                               "training" = "#1f78b4")) +
+                    values = event_colours) +
   theme_minimal() +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    axis.line = element_line(),
-    axis.text = element_text(size = 14),
-    legend.position = "top",
-    legend.direction = "horizontal",
-    legend.text = element_text(size = 14))
-event_summary_plot
+  theme_bar
 ```
 
 
 ### Locations of In-Person Events
 
 ```{r}
+#get cities from bcmaps
 cities <- bcmaps::bc_cities(class = "sf") %>% 
   filter(NAME %in% c("Vancouver", "Victoria", "Prince George"))
 
+#join cities to event data
 event_locations <- event_participation %>% 
   select(location) %>% 
   group_by(location) %>% 
@@ -178,21 +183,23 @@ event_locations <- event_participation %>%
   # mutate(location = recode(location, "Prince George" = "Prince\nGeorge")) %>% 
   sf::st_as_sf()
 
-  ggplot(data = event_locations) +
+#plot in-person event locations
+ggplot(data = event_locations) +
   geom_sf(data = bcmaps::bc_bound(class = "sf"), fill = "white") +
-  geom_sf(colour = "grey30", size = 4) +
+  geom_sf(colour = "#33a02c", size = 3) +
   geom_sf_text(aes(label = location),
                vjust = 1.8, hjust = -.01,
-               size = 4, colour = "grey20",
-               fontface = "bold") +
+               size = 3.5, colour = "grey40") +
   # coord_sf(datum = NA) +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
   theme(legend.position = "none")
 ```
 
+
 Row
 -----------------------------------------------------------------------
+
 
 ### Event Attendance by Year
 
@@ -205,12 +212,14 @@ participation_sum <- participation_count %>%
   summarise(total_part = sum(participants),
             total_event = length(event_type)) 
 
+#total events & participants per year
 event_sum <- participation_sum %>% 
   group_by(year) %>% 
   summarise(num_events = sum(total_event),
             total_part = sum(total_part))
 
-summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
+#bar chart of number of participants
+ggplot(data = participation_sum, aes(year, total_part)) +
   geom_rect(
     aes(
       xmin = 2020 - 0.45,
@@ -233,19 +242,9 @@ summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
                      limits = c(0, 400),
                      breaks = seq(0, 400, 50)) +
   scale_fill_manual(name = NULL,
-                    values = c("meet-up" = "#33a02c",
-                               "webinar" = "#ff7f00",
-                               "training" = "#1f78b4")) +
+                    values = event_colours) +
   theme_minimal() +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    axis.line = element_line(),
-    axis.text = element_text(size = 14),
-    legend.position = "top",
-    legend.direction = "horizontal",
-    legend.text = element_text(size = 14))
-summary_plot 
+  theme_bar
 ```
 
 
@@ -257,38 +256,26 @@ num_by_min <- participation_by_ministry %>%
   select(number_participants) %>% 
   sum()
 
-#colour palette
-colourCount <-  length(unique(participation_by_ministry$ministry))
-getPalette <-  colorRampPalette(brewer.pal(9, "Paired"))
+#waffle colour palette
+colour_count_waffle <-  length(unique(participation_by_ministry$ministry))
+get_palette_waffle <-  colorRampPalette(brewer.pal(12, "Paired"))
 
 #waffle plot
-waffle_plot <- participation_by_ministry %>%
+participation_by_ministry %>%
   group_by(ministry) %>%
   summarise(count = sum(number_participants)) %>%
   ggplot(aes(fill = ministry, values = count)) +
   geom_waffle(rows = 9) +
-  scale_fill_manual(values = getPalette(colourCount), name = NULL) +
+  scale_fill_manual(values = get_palette_waffle(colour_count_waffle),
+                    name = NULL) +
   coord_equal() +
-  # labs(
-  #   title = "CoP Participation by Ministry",
-  #   caption = paste0(
-  #     "(based on ",
-  #     num_by_min,
-  #     " participants who provided organization information)"
-  #   )
-  # ) +
   theme_enhance_waffle() +
   theme_void() +
   theme(
     legend.position = "bottom",
-    legend.text = element_text(size = 8),
-    plot.title = element_text(hjust = .07, face = "bold")
-  ) +
+    legend.text = element_text(size = 8)) +
   guides(fill = guide_legend(ncol = 2, bycol = TRUE))
-waffle_plot
 ```
-
-
 
 
 Training Events
@@ -298,123 +285,217 @@ Training Events
 Row
 -----------------------------------------------------------------------
 
+
 ### Total Workshop Attendees (All Time) {.value-box}
 
 ```{r}
-num_trainees <- workshop_feedback %>% 
-  summarise(sum(number_participants))
-
-valueBox(value = num_trainees, icon = "fa-users")
+#number of workshop attendees all time
+valueBox(value = workshop_feedback %>% 
+  summarise(sum(number_participants)), icon = "fa-users")
 ```
 
 
-### Data Science Workshops Taught (All Time) {.value-box}
+### Total Workshops Delivered (All Time) {.value-box}
 
 ```{r}
-num_events <- event_participation %>% 
+# number of workshops delivered all time
+valueBox(value = event_participation %>% 
   filter(event_type == "training") %>% 
-  count()
-
-valueBox(value = num_events, icon = "fa-calendar")
+  count(), icon = "fa-calendar")
 ```
 
 
-### Average Excellent/Very Good Event Organization Rating
+### Workshop Overall Assessment Scores: Excellent + Very Good (Average All Workshops)
 
 ```{r}
-metric_org <- workshop_feedback %>% 
-  mutate(metric = event_organization_excellent_percent + event_organization_very_good_percent) %>% 
-  select(metric) %>% 
-  summarise(percent = mean(metric, na.rm =TRUE)) %>% 
-  mutate(percent = paste0(percent, "%")) %>% 
-  pull()
-
-
-gauge(metric_org, min = 0, max = 100, symbol = '%', gaugeSectors(
-  success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
-))
-
-# valueBox(value = metric_org, icon = "fa-commenting-o",
-#          caption = "Excellent or Very Good Organization Rating (All Workshops)")
-```
-
-
-### Average Excellent/Very Good Overall Event Rating
-
-
-```{r}
-metric <- workshop_feedback %>% 
+#percent excellent + very good overall assessment scores (averaged across workshops)
+metric_overall <- workshop_feedback %>% 
   mutate(metric = overall_assessment_excellent_percent + overall_assessment_very_good_percent) %>% 
   select(metric) %>% 
   summarise(percent = mean(metric, na.rm =TRUE)) %>% 
   mutate(percent = paste0(percent, "%")) %>%
   pull()
 
-gauge(metric, min = 0, max = 100, symbol = '%', gaugeSectors(
+gauge(metric_overall, min = 0, max = 100, symbol = '%', gaugeSectors(
   success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
 ))
 
-# valueBox(value = metric, icon = "fa-comments",
+# valueBox(value = metric_overall, icon = "fa-comments",
 #          caption = "Excellent or Very Good Overall Rating (All Workshops)")
 ```
 
 
+### Workshop Organization Assessment Scores: Excellent + Very Good (Average All Workshops)
+
 ```{r}
-# workshop_feedback %>%
-#   pivot_longer(cols = starts_with("overall"), names_to = "category", values_to = "percent") %>% 
-#   select(event_title, category, percent)
+#percent excellent + very good organisation assessment scores (averaged across workshops)
+metric_organization <- workshop_feedback %>% 
+  mutate(metric = event_organization_excellent_percent + event_organization_very_good_percent) %>% 
+  select(metric) %>% 
+  summarise(percent = mean(metric, na.rm =TRUE)) %>% 
+  mutate(percent = paste0(percent, "%")) %>% 
+  pull()
+
+gauge(metric_organization, min = 0, max = 100, symbol = '%', gaugeSectors(
+  success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
+))
+
+# valueBox(value = metric_organization, icon = "fa-commenting-o",
+#          caption = "Excellent or Very Good Organization Rating (All Workshops)")
 ```
 
 
 Row
 -----------------------------------------------------------------------
 
-### Attendance by Workshop Type
+
+### Workshop Attendance by Topic
 
 ```{r}
-workshop_attendance <- workshop_feedback %>% 
+#rename workshops to plain language
+renamed_feedback <- workshop_feedback %>% 
   mutate(event_title = recode(event_title,
-                              "bcgov-user-day" = "data science demo day",
-                              "bcgov-data-science-demo-day-workshop" = "data science demo day",
-                              "data-vis-workshop" = "data visualisation",
-                              "intro to ds using r" = "intro to data science programming",
-                              "flnr-r-geospatial-workshop" = "geospatial data science "
-                              )) %>% 
+                              "bcgov-user-day" = "data science\ndemo day (R)",
+                              "bcgov-data-science-demo-day-workshop" = "data science demo\nday + git/GitHub",
+                              "data-vis-workshop" = "data\nvisualisation",
+                              "intro to ds using r" = "intro to data science\nprogramming (R)",
+                              "flnr-r-geospatial-workshop" = "geospatial data science\n+ git/GitHub "))
+
+#event horizontal bar chart theme
+theme_bar_horiz <- theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    axis.text = element_text(size = 11),
+    legend.position = "top",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 11))
+
+#number participants by topic
+renamed_feedback %>% 
   group_by(event_title) %>% 
-  summarise(total_trained = sum(number_participants)) %>% 
-  ggplot() +
-  geom_col(aes(total_trained, event_title),
-           fill = "#1f78b4", alpha = 0.6) +
+  summarise(total_trained = sum(number_participants),
+            no_times_offered = n()) %>% 
+  ggplot(aes(total_trained, event_title)) +
+  geom_col(fill = "#1f78b4", alpha = 0.6) +
+  # geom_text(aes(label = paste0("(", no_times_offered, ")")),
+  #           nudge_x = 5, colour = "grey30", size = 4) +
   labs(x = NULL, y = NULL) +
   scale_x_continuous(expand = c(0, 0),
                      limits = c(0, 90),
                      breaks = seq(0, 80, 20)) +
   theme_minimal() +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    axis.line = element_line(),
-    axis.text = element_text(size = 14))
-workshop_attendance 
+  theme_bar_horiz
 ```
 
+
+### Workshop Overall Assessment Scores by Topic
+
+```{r}
+tidy_feedback <- renamed_feedback %>%
+  pivot_longer(cols = starts_with("overall"), names_to = "category", values_to = "percent") %>%
+  select(event_title, category, percent) %>% 
+  mutate(cat_label = stringr::str_remove(category, "overall_assessment_"),
+         cat_label = stringr::str_remove(cat_label, "_percent"),
+         cat_label = stringr::str_replace(cat_label, "_", " "),
+         cat_label = factor(cat_label, levels = c("excellent",
+                                                  "very good",
+                                                  "good",
+                                                  "fair",
+                                                  "poor"))) 
+#colour palette
+colour_count <-  length(unique(tidy_feedback$category))
+get_palette <-  colorRampPalette(brewer.pal(8, "YlGn"))
+
+# colour_palette <- c("poor" = "pink",
+#                     "fair" = "red",
+#                     "good" = "green",
+#                     "very good" = "blue",
+#                     "excellent" = "black")
+
+tidy_feedback %>% 
+  group_by(event_title, cat_label) %>% 
+  summarise(avg_percent = mean(percent, na.rm = TRUE)) %>% 
+  ggplot(aes(avg_percent, event_title, fill = cat_label)) +
+  geom_col(alpha = 0.6) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 110),
+                     breaks = seq(0, 100, 20)) +
+  scale_fill_manual(values = rev(get_palette(colour_count)),
+                    name = NULL,
+                    guide = guide_legend(reverse = TRUE),
+                    drop = FALSE,
+                    na.value = "black") +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme_bar_horiz
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+
+### Number of Workshops Delivered by Topic
+
+```{r}
+renamed_feedback %>% 
+  group_by(event_title) %>% 
+  summarise(total_trained = sum(number_participants),
+            no_times_offered = n()) %>% 
+  ggplot(aes(no_times_offered, event_title)) +
+  geom_col(fill = "#1f78b4", alpha = 0.6) +
+  # geom_text(aes(label = paste0("(", no_times_offered, ")")),
+  #           nudge_x = 5, colour = "grey30", size = 4) +
+  labs(x = NULL, y = NULL) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 3),
+                     breaks = seq(0, 3, 1)) +
+  theme_minimal() +
+  theme_bar_horiz
+```
+
+
+### Workshop Organization Assessment Scores by Topic
+
+```{r}
+tidy_feedback %>% 
+  group_by(event_title, cat_label) %>% 
+  summarise(avg_percent = mean(percent, na.rm = TRUE)) %>% 
+  ggplot(aes(avg_percent, event_title, fill = cat_label)) +
+  geom_col(alpha = 0.6) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 110),
+                     breaks = seq(0, 100, 20)) +
+  scale_fill_manual(values = rev(get_palette(colour_count)),
+                    name = NULL, guide = guide_legend(reverse = TRUE)) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme_bar_horiz
+```
 
 
 About
 ======================================================================
 
+
 Row {data-height=300}
 -----------------------------------------------------------------------
+
 
 ```{r, fig.width=3, fig.height=2}
 knitr::include_graphics("data/cop-logo-updated.png") 
 ```
+
 
 The **Data Science Community of Practice (CoP)** was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate, share and learn about data science. The community exists online&mdash;and sometimes in-person&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.  
 &nbsp;\
 • **Join** the Data Science Community of Practice online in [bcgov Yammer](https://www.yammer.com/gov.bc.ca/#/threads/inGroup?type=in_group&feedId=5334748&view=all) and [MS Teams](https://teams.microsoft.com/l/team/19%3ab854478e8ff6436397e1cfa477422033%40thread.tacv2/conversations?groupId=a3bf276d-80e4-43c5-9387-3364248651ac&tenantId=6fdb5200-3d0d-4a8a-b036-d3685e359adc)  
 • **Read** blog posts about past & future Data Science Community of Practice events [here](https://gww.gov.bc.ca/groups/data-science-community-practice)   
 • **Find** Data Science Community of Practice materials & resources [here](https://github.com/bcgov/bcgov-data-science-cop)  
+
+
 
 
  
