@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    source_code: https://github.com/bcgov/bcgov-data-science-cop
+    source_code: https://github.com/bcgov/bcgov-data-science-cop/blob/master/reporting/cop-dashboard.Rmd
 ---
 
 
@@ -391,7 +391,7 @@ renamed_feedback %>%
 ```
 
 
-### Particpant Assessment of Workshop Overall by Topic
+### Participant Assessments: Overall Rating by Workshop
 
 ```{r}
 tidy_feedback <- renamed_feedback %>%
@@ -464,7 +464,7 @@ renamed_feedback %>%
 ```
 
 
-### Participant Assessment of Workshop Organization by Topic
+### Participant Assessments: Organization Rating by Workshop
 
 ```{r}
 tidy_feedback %>% 
