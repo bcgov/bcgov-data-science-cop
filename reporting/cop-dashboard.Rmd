@@ -7,6 +7,7 @@ output:
     source_code: https://github.com/bcgov/bcgov-data-science-cop
 ---
 
+
 ```{r setup, include=FALSE}
 ## libraries
 library(flexdashboard)
@@ -305,7 +306,7 @@ valueBox(value = event_participation %>%
 ```
 
 
-### Workshop Overall Assessment Scores: Excellent + Very Good (Average All Workshops)
+### Workshop Overall Rating of Excellent + Very Good (Avg All Workshops)
 
 ```{r}
 #percent excellent + very good overall assessment scores (averaged across workshops)
@@ -325,12 +326,12 @@ gauge(metric_overall, min = 0, max = 100, symbol = '%', gaugeSectors(
 ```
 
 
-### Workshop Organization Assessment Scores: Excellent + Very Good (Average All Workshops)
+### Workshop Organization Rating of Excellent + Very Good (Avg All Workshops)
 
 ```{r}
 #percent excellent + very good organisation assessment scores (averaged across workshops)
 metric_organization <- workshop_feedback %>% 
-  mutate(metric = event_organization_excellent_percent + event_organization_very_good_percent) %>% 
+  mutate(metric = organization_assessment_excellent_percent + organization_assessment_very_good_percent) %>% 
   select(metric) %>% 
   summarise(percent = mean(metric, na.rm =TRUE)) %>% 
   mutate(percent = paste0(percent, "%")) %>% 
@@ -390,23 +391,26 @@ renamed_feedback %>%
 ```
 
 
-### Workshop Overall Assessment Scores by Topic
+### Particpant Assessment of Workshop Overall by Topic
 
 ```{r}
 tidy_feedback <- renamed_feedback %>%
-  pivot_longer(cols = starts_with("overall"), names_to = "category", values_to = "percent") %>%
+  pivot_longer(cols = starts_with(c("overall", "organization")),
+               names_to = "category",
+               values_to = "percent") %>%
   select(event_title, category, percent) %>% 
-  mutate(cat_label = stringr::str_remove(category, "overall_assessment_"),
+  mutate(cat_label = stringr::str_remove_all(category, "(overall|organization)_assessment_"),
          cat_label = stringr::str_remove(cat_label, "_percent"),
          cat_label = stringr::str_replace(cat_label, "_", " "),
          cat_label = factor(cat_label, levels = c("excellent",
                                                   "very good",
                                                   "good",
                                                   "fair",
-                                                  "poor"))) 
+                                                  "poor")))
+
 #colour palette
-colour_count <-  length(unique(tidy_feedback$category))
-get_palette <-  colorRampPalette(brewer.pal(8, "YlGn"))
+colour_count <-  length(unique(tidy_feedback$cat_label))
+get_palette <-  colorRampPalette(brewer.pal(9, "YlGn")[2:9])
 
 # colour_palette <- c("poor" = "pink",
 #                     "fair" = "red",
@@ -414,9 +418,10 @@ get_palette <-  colorRampPalette(brewer.pal(8, "YlGn"))
 #                     "very good" = "blue",
 #                     "excellent" = "black")
 
-tidy_feedback %>% 
+p <- tidy_feedback %>% 
+  filter(stringr::str_starts(category, "overall")) %>% 
   group_by(event_title, cat_label) %>% 
-  summarise(avg_percent = mean(percent, na.rm = TRUE)) %>% 
+  summarise(avg_percent = mean(percent)) %>% 
   ggplot(aes(avg_percent, event_title, fill = cat_label)) +
   geom_col(alpha = 0.6) +
   scale_x_continuous(expand = c(0, 0),
@@ -425,11 +430,13 @@ tidy_feedback %>%
   scale_fill_manual(values = rev(get_palette(colour_count)),
                     name = NULL,
                     guide = guide_legend(reverse = TRUE),
-                    drop = FALSE,
                     na.value = "black") +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
   theme_bar_horiz
+p
+
+# ggplotly(p)
 ```
 
 
@@ -457,19 +464,22 @@ renamed_feedback %>%
 ```
 
 
-### Workshop Organization Assessment Scores by Topic
+### Participant Assessment of Workshop Organization by Topic
 
 ```{r}
 tidy_feedback %>% 
+  filter(stringr::str_starts(category, "organization")) %>% 
   group_by(event_title, cat_label) %>% 
-  summarise(avg_percent = mean(percent, na.rm = TRUE)) %>% 
+  summarise(avg_percent = mean(percent)) %>% 
   ggplot(aes(avg_percent, event_title, fill = cat_label)) +
   geom_col(alpha = 0.6) +
   scale_x_continuous(expand = c(0, 0),
                      limits = c(0, 110),
                      breaks = seq(0, 100, 20)) +
   scale_fill_manual(values = rev(get_palette(colour_count)),
-                    name = NULL, guide = guide_legend(reverse = TRUE)) +
+                    name = NULL,
+                    guide = guide_legend(reverse = TRUE),
+                    na.value = "black") +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
   theme_bar_horiz
