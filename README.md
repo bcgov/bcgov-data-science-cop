@@ -24,12 +24,15 @@ Victoria, B.C.
 
 
 _**ATTENTION**_  
-Our Friday, April 17th 2020  (9:30am to 11:30am) `<bcgov/code_together>` event is **cancelled**. Stay tuned for details on a fully remote `<bcgov/code_together>` event in May 2020!
+Our `<bcgov/code_together>` events will be fully remote through the bcgov Data Science CoP MS Team until further notice.
+
 
 ### Upcoming Data Science Training Events
- - [Introduction to Data Science using R (Online, 6-7 May 2020)](https://github.com/bcgov/ds-intro-to-r-2-day)
+ - Stay tuned!
+
 
 ### Past Data Science Events
+ - [Introduction to Data Science using R (Online, 6-7 May 2020)](https://github.com/bcgov/ds-intro-to-r-2-day)
  - [FLNRO-sponsered bcgov North Area R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-r-geo-workshop)
  - [Introduction to Data Science using R (Victoria, 2 October 2019)](https://github.com/bcgov/ds-cop-intro-to-r)
  - [bcgov Data Science Demo Day (Victoria, 17 April 2019)](https://github.com/bcgov/bcgov-data-science-cop/tree/master/2019/2019-04-17_ds-demo-day-yyj)
