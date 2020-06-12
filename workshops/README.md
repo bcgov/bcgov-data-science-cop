@@ -11,7 +11,19 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0
 
 # Data Science CoP Workshop Checklist
 
-The Data Science Community of Practice (CoP) leads and supports data science training events in support of continuous learning in data science in the BC Public Service.
+The Data Science Community of Practice (CoP) periodically leads or supports data science training workshops to promote continuous learning in data science in the BC Public Service. 
+
+
+- [ ] registration
+- [ ] pre-course survey
+- [ ] open-source content
+- [ ] team teaching
+- [ ] break-out rooms
+- [ ] where to find help/support after the workshop
+- [ ] feedback survey
+
+
+
 
 
 
