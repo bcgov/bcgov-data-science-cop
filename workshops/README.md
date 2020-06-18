@@ -31,7 +31,7 @@ The Data Science Community of Practice (CoP) periodically leads or supports in-p
     - have & use a wait list  
 - [ ] use a pre-course survey or [pre-course video-chats](https://ropensci.org/blog/2017/11/17/unconf-sixtips/) with participants
 - [ ] use a team teaching approach (e.g. possible formats discussed [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433))
-- [ ] consider supporting computing environment set-up _before_ the workshop, or using a cloud-based alternative (e.g. [RStudio Cloud](https://rstudio.cloud/), [Colaboratory](https://colab.research.google.com/notebooks/intro.ipynb))
+- [ ] consider supporting participants with computing environment set-up _before_ the workshop, or using/having a cloud-based alternative (e.g. [RStudio Cloud](https://rstudio.cloud/), [Colaboratory](https://colab.research.google.com/notebooks/intro.ipynb))
 - [ ] include a helper/moderator to support workshop teaching team & participants  
     - manage video-conferencing tool  
     - trouble-shooting  
@@ -39,7 +39,7 @@ The Data Science Community of Practice (CoP) periodically leads or supports in-p
     - oversee workshop timing 
 - [ ] include an [effective ice breaker](https://ropensci.org/blog/2017/11/17/unconf-sixtips/)
 - [ ] carefully consider workshop content  
-    - ensure the amount of material is appropriate for the time allotted (material _always_ takes longer to cover than estimated) 
+    - ensure the amount of material is appropriate for the allotted time (material _always_ takes longer to cover than estimated) 
     - [take it slow](https://software-carpentry.org/blog/2016/04/tips-tricks-live-coding.html)
     - take [frequent breaks](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433)
 - [ ] use break-out rooms & [formative assessments](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433) 
