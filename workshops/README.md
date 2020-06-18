@@ -9,22 +9,38 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0
 
 
 
-# Data Science CoP Workshop Checklist
+# Data Science CoP Workshops 
 
-The Data Science Community of Practice (CoP) periodically leads or supports data science training workshops to promote continuous learning in data science in the BC Public Service. 
-
-
-- [ ] registration
-- [ ] pre-course survey
-- [ ] open-source content
-- [ ] team teaching
-- [ ] break-out rooms
-- [ ] where to find help/support after the workshop
-- [ ] feedback survey
+The Data Science Community of Practice (CoP) periodically leads or supports in-person and online data science training workshops to promote continuous learning in data science in the BC Public Service. 
 
 
+### Some Resources for Delivering Data Science (Programming) Workshops:
+
+ - [Ten quick tips for delivering programming lessons](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433)
+ - [10 tips and tricks for instructing and teaching by means of live coding](https://software-carpentry.org/blog/2016/04/tips-tricks-live-coding.html)
+ - [Tips for Teaching Online from The Carpentries Community](https://carpentries.org/blog/2020/03/tips-for-teaching-online/)
+ - [Lessons learned from running our first online workshop](https://coderefinery.org/blog/2020/04/14/first-online-workshop/)
+ - [Six tips for running a successful unconference](https://ropensci.org/blog/2017/11/17/unconf-sixtips/)
 
 
+### CoP Workshop Organisation & Delivery Checklist
+
+- [ ] use & enforce a code of conduct  ([example](https://www.contributor-covenant.org/version/1/4/code-of-conduct/))
+- [ ] use online registration  
+      - advertise in multiple channels (e.g. bcgov Yammer, @Work, email, MS Teams)    
+      - have & use a wait list  
+- [ ] use a team teaching approach (e.g. possible formats discussed [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433))
+- [ ] use a pre-course survey or pre-course video-chats with participants
+- [ ] open-source the workshop code and notes (e.g. [GitHub](https://github.com/bcgov/ds-intro-to-r-2-day))
+- [ ] include a moderator to support workshop teaching team & participants  
+          - manage video-conferencing tool  
+          - trouble-shooting  
+          - oversee workshop timing  
+- [ ] include an [effective ice breaker](https://ropensci.org/blog/2017/11/17/unconf-sixtips/)
+- [ ] use break-out rooms & frequent [formative assessments](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433)
+- [ ] capture the content from the day (e.g. chats, wiki, white boards)
+- [ ] ensure participants know where & how to find community help/support _after_ the workshop
+- [ ] include a feedback survey
 
 
 
