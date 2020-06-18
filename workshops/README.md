@@ -27,21 +27,23 @@ The Data Science Community of Practice (CoP) periodically leads or supports in-p
 
 - [ ] use & enforce a code of conduct  ([example](https://www.contributor-covenant.org/version/1/4/code-of-conduct/))
 - [ ] use online registration  
-      - advertise in multiple channels (e.g. bcgov Yammer, @Work, email, MS Teams)    
-      - have & use a wait list  
+    - advertise in multiple channels (e.g. bcgov Yammer, @Work, email, MS Teams)    
+    - have & use a wait list  
 - [ ] use a team teaching approach (e.g. possible formats discussed [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433))
-- [ ] use a pre-course survey or pre-course video-chats with participants
-- [ ] open-source the workshop code and notes (e.g. [GitHub](https://github.com/bcgov/ds-intro-to-r-2-day))
-- [ ] include a moderator to support workshop teaching team & participants  
-          - manage video-conferencing tool  
-          - trouble-shooting  
-          - oversee workshop timing  
+- [ ] use a pre-course survey or [pre-course video-chats](https://ropensci.org/blog/2017/11/17/unconf-sixtips/) with participants
+- [ ] open-source the workshop code and notes (e.g. online or in [GitHub](https://github.com/bcgov/ds-intro-to-r-2-day))
+- [ ] include a helper/moderator to support workshop teaching team & participants  
+    - manage video-conferencing tool  
+    - trouble-shooting  
+    - support technology issues  
+    - oversee workshop timing  
 - [ ] include an [effective ice breaker](https://ropensci.org/blog/2017/11/17/unconf-sixtips/)
-- [ ] use break-out rooms & frequent [formative assessments](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433)
+- [ ] use break-out rooms, frequent [formative assessments](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433) & regular breaks
 - [ ] capture the content from the day (e.g. chats, wiki, white boards)
-- [ ] ensure participants know where & how to find community help/support _after_ the workshop
-- [ ] include a feedback survey
-
+- [ ] ensure participants know where & [how](https://www.tidyverse.org/help/) to find community help/support _after_ the workshop
+- [ ] include a feedback survey  
+    - include an overall workshop assessment (poor, fair, good, very good, excellent)
+    - include an workshop organization assessment (poor, fair, good, very good, excellent)
 
 
 
