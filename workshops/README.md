@@ -29,16 +29,21 @@ The Data Science Community of Practice (CoP) periodically leads or supports in-p
 - [ ] use online registration  
     - advertise in multiple channels (e.g. bcgov Yammer, @Work, email, MS Teams)    
     - have & use a wait list  
-- [ ] use a team teaching approach (e.g. possible formats discussed [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433))
 - [ ] use a pre-course survey or [pre-course video-chats](https://ropensci.org/blog/2017/11/17/unconf-sixtips/) with participants
-- [ ] open-source the workshop code and notes (e.g. online or in [GitHub](https://github.com/bcgov/ds-intro-to-r-2-day))
+- [ ] use a team teaching approach (e.g. possible formats discussed [here](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433))
+- [ ] consider supporting computing environment set-up _before_ the workshop, or using a cloud-based alternative (e.g. [RStudio Cloud](https://rstudio.cloud/), [Colaboratory](https://colab.research.google.com/notebooks/intro.ipynb))
 - [ ] include a helper/moderator to support workshop teaching team & participants  
     - manage video-conferencing tool  
     - trouble-shooting  
     - support technology issues  
-    - oversee workshop timing  
+    - oversee workshop timing 
 - [ ] include an [effective ice breaker](https://ropensci.org/blog/2017/11/17/unconf-sixtips/)
-- [ ] use break-out rooms, frequent [formative assessments](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433) & regular breaks
+- [ ] carefully consider workshop content  
+    - ensure the amount of material is appropriate for the time allotted (material _always_ takes longer to cover than estimated) 
+    - [take it slow](https://software-carpentry.org/blog/2016/04/tips-tricks-live-coding.html)
+    - take [frequent breaks](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433)
+- [ ] use break-out rooms & [formative assessments](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007433) 
+- [ ] open-source the workshop code and notes (e.g. online or in [GitHub](https://github.com/bcgov/ds-intro-to-r-2-day))
 - [ ] capture the content from the day (e.g. chats, wiki, white boards)
 - [ ] ensure participants know where & [how](https://www.tidyverse.org/help/) to find community help/support _after_ the workshop
 - [ ] include a feedback survey  
