@@ -109,7 +109,7 @@ summary_plot <- ggplot(data = participation_sum, aes(year, total_part)) +
   scale_fill_manual(name = NULL,
                     values = c("meet-up" = "#edf8b1",
                                "webinar" = "#7fcdbb",
-                               "training" = "#2c7fb8")) +
+                               "workshop" = "#2c7fb8")) +
   theme_minimal() +
   theme(
     panel.grid.major.x = element_blank(),
@@ -154,7 +154,7 @@ cumulative_participation <- participation_count %>%
 
 #cumulative number of trainees over time
 cumulative_trained <- participation_count %>% 
-  filter(event_type == "training") %>% 
+  filter(event_type %in% c("workshop", "webinar")) %>% 
   arrange(date) %>% 
   mutate(cumsum_trained = cumsum(participants))
 
@@ -162,8 +162,8 @@ cumulative_trained <- participation_count %>%
 #future attendance goal
 future <- tribble(
   ~date, ~cumsum_part, ~cumsum_trained,
-  "2020-05-15", 573, 223,
-  "2020-12-31", 700, 300
+  "2020-07-06", 581, 390,
+  "2020-12-31", 700, 500
 )
 
 
@@ -249,7 +249,7 @@ cumulative_plot <- ggplot() +
     panel.grid.minor.x = element_blank(),
     axis.line = element_line(),
     plot.title = element_text(
-      hjust = -2,
+      hjust = 0,
       face = "bold",
       size = 26,
       colour = "grey30"
@@ -265,8 +265,4 @@ ggsave(here::here("reporting/out/cop-cumulative-participation.png"),
        height = 9)
 ```
 
-
-```{r outputs}
-
-```
 
