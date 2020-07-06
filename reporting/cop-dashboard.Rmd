@@ -133,7 +133,7 @@ event_sum <- participation_count %>%
 #event colours
 event_colours = c("meet-up" = "#33a02c",
                   "webinar" = "#ff7f00",
-                   "training" = "#1f78b4")
+                   "workshop" = "#1f78b4")
 
 #event bar chart theme
 theme_bar <- theme(
