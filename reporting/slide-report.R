@@ -69,21 +69,21 @@ num_part <- part_count %>%
 #number of training events
 num_train_events <- event_part %>%
   filter(date < today(),
-         event_type == "training") %>% 
+         event_type %in% c("workshop", "webinar")) %>% 
   count()
 
 
 #number of overall training participants (all in-person)
 num_trained <- part_count %>%
-  filter(event_type == "training") %>%
-  summarise(sum(participants))
+  filter(event_type %in% c("workshop", "webinar")) %>%
+  summarise(num_trained = sum(participants))
 
 
 #average waitlist
 # event_part %>%
 #   mutate(waiting_list = suppressWarnings(as.numeric(waiting_list))) %>%
 #   filter(date < today(),
-#          event_type == "training") %>%
+#          event_type %in% c("workshop", "webinar")) %>%
 #   summarise(mean(waiting_list, na.rm = TRUE))
 
 
@@ -93,7 +93,7 @@ part_by_min %>%
   count()
 
 
-#number of particpants by Ministry
+#number of participants by Ministry
 num_by_min <- part_by_min %>% 
   select(number_participants) %>% 
   sum()
@@ -146,17 +146,21 @@ ggsave("reporting/out/cop-report-waffle.png",
 
 #pptx CoP reporting slide
 top_text <- fpar(
-    ftext("Data Science CoP Summary\n", prop = fp_text(bold = FALSE, font.size = 40)),
+    ftext("Data Science CoP Summary\n",
+          prop = fp_text(bold = FALSE,
+                         font.size = 40)),
     ftext(paste0(num_events, " events, including ", num_train_events,
-                         " training days\n", num_part, " participants overall, ",
-                         num_trained, " attended training days"), prop = fp_text(font.size = 16, color = "grey30")),
+                         " training sessions\n", num_part, " participants overall, ",
+                         num_trained, " attended training sessions"),
+          prop = fp_text(font.size = 16, color = "grey30")),
     fp_p = fp_par(text.align = "center"))
+
 
 summary_slide <- read_pptx()  %>% 
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
   ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "Includes August 2018 - May 2020 Events", location = ph_location_type(type = "ftr")) 
+  ph_with(value = "Includes August 2018 - June 2020 Events", location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/out/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
