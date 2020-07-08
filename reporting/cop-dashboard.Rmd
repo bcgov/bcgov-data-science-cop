@@ -15,7 +15,6 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0
 -->
 
 
-
 ```{r setup, include=FALSE}
 ## libraries
 library(flexdashboard)
@@ -76,14 +75,13 @@ valueBox(value = event_participation %>%
   count(), icon = "fa-calendar")
 ```
 
-
 ### Total Attendance (All Time) {.value-box}
 
 ```{r}
 #cumulative event attendance
 participation_count <- event_participation %>%
   filter(date < today()) %>%
-  select(date, event_type, in_person_participants, on_line_participants) %>%
+  select(date, event_title, event_type, in_person_participants, on_line_participants) %>%
   mutate(on_line_participants = replace_na(on_line_participants, 0),
          in_person_participants = replace_na(in_person_participants, 0)) %>%
   mutate(participants = in_person_participants + on_line_participants) 
@@ -91,7 +89,6 @@ participation_count <- event_participation %>%
 valueBox(value = participation_count %>% 
   summarise(sum(participants)), icon = "fa-users")
 ```
-
 
 ### Geographic Locations {.value-box}
 
@@ -104,7 +101,6 @@ num_locations <- event_participation %>%
  
 valueBox(value = num_locations, icon = "fa-globe")
 ```
-
 
 ### Number of Ministries Represented (All Time) {.value-box}
 
@@ -131,9 +127,9 @@ event_sum <- participation_count %>%
   count()
 
 #event colours
-event_colours = c("meet-up" = "#33a02c",
+event_colours = c("meet-up" = "#1f78b4",
                   "webinar" = "#ff7f00",
-                   "workshop" = "#1f78b4")
+                  "workshop" = "#33a02c")
 
 #event bar chart theme
 theme_bar <- theme(
@@ -173,7 +169,6 @@ ggplot(data = event_sum, aes(year, n)) +
   theme_minimal() +
   theme_bar
 ```
-
 
 ### Locations of In-Person Events
 
@@ -256,7 +251,6 @@ ggplot(data = participation_sum, aes(year, total_part)) +
   theme_bar
 ```
 
-
 ### Attendance by Ministry
 
 ```{r}
@@ -295,26 +289,154 @@ Row
 -----------------------------------------------------------------------
 
 
-### Total Workshop Attendees (All Time) {.value-box}
+### Number of Training Events (Total All Time) {.value-box}
 
 ```{r}
-#number of workshop attendees all time
-valueBox(value = workshop_feedback %>% 
-  summarise(sum(number_participants)), icon = "fa-users")
+# number of workshops + webinars delivered all time
+valueBox(value = event_participation %>% 
+  filter(event_type %in% c("workshop", "webinar")) %>% 
+  count(), icon = "fa-calendar")
+```
+
+### Number of Training Attendees (Total All Time) {.value-box}
+
+```{r}
+#number of workshop+webinars attendees all time
+valueBox(value = participation_count %>% 
+  filter(event_type %in% c("workshop", "webinar")) %>% 
+  summarise(sum(participants)), icon = "fa-users")
 ```
 
 
-### Total Workshops Delivered (All Time) {.value-box}
+Row
+-----------------------------------------------------------------------
+
+
+### Workshops (Total All Time) {.value-box}
 
 ```{r}
 # number of workshops delivered all time
 valueBox(value = event_participation %>% 
-  filter(event_type == "training") %>% 
-  count(), icon = "fa-calendar")
+  filter(event_type == "workshop") %>% 
+  count(), icon = "fa-building")
+```
+
+### Webinars (Total All Time) {.value-box}
+
+```{r}
+# number of webinars delivered all time
+valueBox(value = event_participation %>% 
+  filter(event_type == "webinar") %>% 
+  count(), icon = "fa-video")
+```
+
+### Workshop Training Attendees (Total All Time) {.value-box}
+
+```{r}
+#number of workshop attendees all time
+valueBox(value = participation_count %>% 
+  filter(event_type == "workshop") %>% 
+  summarise(sum(participants)), icon = "fa-user")
+```
+
+### Webinar Training Attendees (Total All Time) {.value-box}
+
+```{r}
+#number of webinar attendees all time
+valueBox(value = participation_count %>% 
+  filter(event_type == "webinar") %>% 
+  summarise(sum(participants)), icon = "fa-user")
 ```
 
 
-### Workshop Overall Rating of Excellent + Very Good (Avg All Workshops)
+Row
+-----------------------------------------------------------------------
+
+
+### Number of Training Events by Year
+
+```{r}
+#number of events by year and event type
+training_sum <- participation_count %>%
+  mutate(year = year(date)) %>% 
+  filter(event_type %in% c("workshop", "webinar")) %>% 
+  group_by(year, event_type) %>% 
+  count()
+
+
+#bar chart of number of events
+ggplot(data = training_sum, aes(year, n)) +
+  geom_rect(
+    aes(
+      xmin = 2020 - 0.45,
+      xmax = 2020 + 0.45,
+      ymin = 0,
+      ymax = 6
+    ),
+    alpha = 0.1,
+    fill = "grey90"
+  ) +
+  geom_col(aes(fill = event_type), alpha = 0.6) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  geom_text(aes(x = 2020, y = 5.6,
+                label = "2020 Goal"),
+            size = 4, colour = "grey20") +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 6),
+                     breaks = seq(0, 6, 2)) +
+  scale_fill_manual(name = NULL,
+                    values = event_colours) +
+  theme_minimal() +
+  theme_bar
+```
+
+### Training Attendance by Event (Number Offerings)
+
+```{r}
+#event horizontal bar chart theme
+theme_bar_horiz <- theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.line = element_line(),
+    axis.text = element_text(size = 11),
+    legend.position = "top",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 11))
+
+#number participants by topic
+participation_count %>%
+  filter(event_type %in% c("workshop", "webinar")) %>% 
+  group_by(event_title, event_type) %>% 
+  summarise(total_trained = sum(participants),
+            no_times_offered = n()) %>% 
+  ggplot(aes(total_trained, event_title)) +
+  geom_col(aes(fill = event_type), alpha = 0.6) +
+  scale_fill_manual(name = NULL,
+                    values = event_colours) +
+  geom_text(aes(label = paste0("(", no_times_offered, ")")),
+            nudge_x = 5, colour = "grey30", size = 4) +
+  labs(x = NULL, y = NULL) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 130),
+                     breaks = seq(0, 120, 20)) +
+  theme_minimal() +
+  theme_bar_horiz
+```
+
+
+Workshop Evaluations
+======================================================================
+
+
+Row
+-----------------------------------------------------------------------
+
+
+### Overall  Evaluation: Participant Rating of Excellent + Very Good (Avg All Workshops)
 
 ```{r}
 #percent excellent + very good overall assessment scores (averaged across workshops)
@@ -333,8 +455,7 @@ gauge(metric_overall, min = 0, max = 100, symbol = '%', gaugeSectors(
 #          caption = "Excellent or Very Good Overall Rating (All Workshops)")
 ```
 
-
-### Workshop Organization Rating of Excellent + Very Good (Avg All Workshops)
+### Organization Evaluation: Participant Rating of Excellent + Very Good (Avg All Workshops)
 
 ```{r}
 #percent excellent + very good organisation assessment scores (averaged across workshops)
@@ -358,51 +479,10 @@ Row
 -----------------------------------------------------------------------
 
 
-### Workshop Attendance by Topic
-
-```{r}
-#rename workshops to plain language
-renamed_feedback <- workshop_feedback %>% 
-  mutate(event_title = recode(event_title,
-                              "bcgov-user-day" = "data science\ndemo day (R)",
-                              "bcgov-data-science-demo-day-workshop" = "data science demo\nday + git/GitHub",
-                              "data-vis-workshop" = "data\nvisualisation",
-                              "intro to ds using r" = "intro to data science\nprogramming (R)",
-                              "flnr-r-geospatial-workshop" = "geospatial data science\n+ git/GitHub "))
-
-#event horizontal bar chart theme
-theme_bar_horiz <- theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    axis.line = element_line(),
-    axis.text = element_text(size = 11),
-    legend.position = "top",
-    legend.direction = "horizontal",
-    legend.text = element_text(size = 11))
-
-#number participants by topic
-renamed_feedback %>% 
-  group_by(event_title) %>% 
-  summarise(total_trained = sum(number_participants),
-            no_times_offered = n()) %>% 
-  ggplot(aes(total_trained, event_title)) +
-  geom_col(fill = "#1f78b4", alpha = 0.6) +
-  # geom_text(aes(label = paste0("(", no_times_offered, ")")),
-  #           nudge_x = 5, colour = "grey30", size = 4) +
-  labs(x = NULL, y = NULL) +
-  scale_x_continuous(expand = c(0, 0),
-                     limits = c(0, 90),
-                     breaks = seq(0, 80, 20)) +
-  theme_minimal() +
-  theme_bar_horiz
-```
-
-
 ### Participant Assessments: Overall Rating by Workshop
 
 ```{r}
-tidy_feedback <- renamed_feedback %>%
+tidy_feedback <- workshop_feedback %>%
   pivot_longer(cols = starts_with(c("overall", "organization")),
                names_to = "category",
                values_to = "percent") %>%
@@ -427,6 +507,7 @@ get_palette <-  colorRampPalette(brewer.pal(9, "YlGn")[2:9])
 #                     "excellent" = "black")
 
 p <- tidy_feedback %>% 
+  drop_na() %>% 
   filter(stringr::str_starts(category, "overall")) %>% 
   group_by(event_title, cat_label) %>% 
   summarise(avg_percent = mean(percent)) %>% 
@@ -447,35 +528,11 @@ p
 # ggplotly(p)
 ```
 
-
-Row
------------------------------------------------------------------------
-
-
-### Number of Workshops Delivered by Topic
-
-```{r}
-renamed_feedback %>% 
-  group_by(event_title) %>% 
-  summarise(total_trained = sum(number_participants),
-            no_times_offered = n()) %>% 
-  ggplot(aes(no_times_offered, event_title)) +
-  geom_col(fill = "#1f78b4", alpha = 0.6) +
-  # geom_text(aes(label = paste0("(", no_times_offered, ")")),
-  #           nudge_x = 5, colour = "grey30", size = 4) +
-  labs(x = NULL, y = NULL) +
-  scale_x_continuous(expand = c(0, 0),
-                     limits = c(0, 3),
-                     breaks = seq(0, 3, 1)) +
-  theme_minimal() +
-  theme_bar_horiz
-```
-
-
 ### Participant Assessments: Organization Rating by Workshop
 
 ```{r}
 tidy_feedback %>% 
+  drop_na() %>% 
   filter(stringr::str_starts(category, "organization")) %>% 
   group_by(event_title, cat_label) %>% 
   summarise(avg_percent = mean(percent)) %>% 
@@ -505,7 +562,6 @@ Row {data-height=300}
 ```{r, fig.width=3, fig.height=2}
 knitr::include_graphics("data/cop-logo-updated.png") 
 ```
-
 
 The **Data Science Community of Practice (CoP)** was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate, share and learn about data science. The community exists online&mdash;and sometimes in-person&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.  
 &nbsp;\
