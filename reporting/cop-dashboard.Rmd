@@ -83,8 +83,8 @@ participation_count <- event_participation %>%
   filter(date < today()) %>%
   select(date, event_title, event_type, in_person_participants, on_line_participants) %>%
   mutate(on_line_participants = replace_na(on_line_participants, 0),
-         in_person_participants = replace_na(in_person_participants, 0)) %>%
-  mutate(participants = in_person_participants + on_line_participants) 
+         in_person_participants = replace_na(in_person_participants, 0),
+         participants = in_person_participants + on_line_participants)
 
 valueBox(value = participation_count %>% 
   summarise(sum(participants)), icon = "fa-users")
@@ -549,6 +549,48 @@ tidy_feedback %>%
   theme_minimal() +
   theme_bar_horiz
 ```
+
+
+Explore Past Events
+======================================================================
+
+
+Row {data-height="900"}
+-----------------------------------------------------------------------
+
+```{r, fig.align='center'}
+library(reactable)
+library(htmltools)
+
+participation_count %>%
+  select(event_type, date, event_title, participants) %>%
+  arrange(desc(date)) %>% 
+  reactable(columns = list(
+  event_type = colDef(name = "Event Type",
+                      footer = "Total"
+                      ),
+  date = colDef(name = "Date"),
+  event_title = colDef(name = "Event"),
+  participants = colDef(name = "Number of Participants",
+                        align = "center",
+                        footer = function(values) sum(values),
+                        filterable = FALSE)),
+  defaultColDef = colDef(footerStyle = list(fontWeight = "bold")),
+filterable = TRUE,
+# minRows = 10,
+# defaultPageSize = 10,
+width = "100%",
+height = "100%", 
+# pagination = FALSE,
+showPageSizeOptions = TRUE,
+pageSizeOptions = c(6, 12, 24),
+defaultPageSize = 6,
+minRows = 6,
+# fullWidth = FALSE,
+highlight = TRUE,
+striped = TRUE)
+```
+
 
 
 About
