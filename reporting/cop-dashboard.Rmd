@@ -28,6 +28,11 @@ library(waffle)
 library(RColorBrewer)
 library(plotly)
 
+library(reactable)
+library(htmltools)
+library(crosstalk)
+library(flextable)
+
 ## paths LAN
 # if(.Platform$OS.type == "windows"){
 lanpath
@@ -551,46 +556,85 @@ tidy_feedback %>%
 ```
 
 
-Explore Past Events
+Explore Event Data 
 ======================================================================
 
 
 Row {data-height="900"}
 -----------------------------------------------------------------------
 
-```{r, fig.align='center'}
-library(reactable)
-library(htmltools)
+```{r}
+event_num_min <- participation_by_ministry %>% 
+  select(event_title, date, ministry) %>% 
+  distinct() %>% 
+  group_by(date, event_title) %>% 
+  count()
 
-participation_count %>%
-  select(event_type, date, event_title, participants) %>%
-  arrange(desc(date)) %>% 
-  reactable(columns = list(
-  event_type = colDef(name = "Event Type",
-                      footer = "Total"
+table_df <- participation_count %>%
+  left_join(event_num_min, by = c("event_title", "date")) %>% 
+  select(event_type, event_title, date, n, participants) %>%
+  arrange(desc(date)) 
+
+data <- SharedData$new(table_df)
+
+bscols(
+  widths = c(4,8),
+  list(
+    filter_checkbox("type", "Event Type", data, ~event_type),
+    filter_slider("part", "Number of Participants", data, ~participants, width = "100%")
+  ),
+  reactable(data, 
+            columns = list(
+  event_type = colDef(name = "Event Type" #,
+                      # footer = "Total"
                       ),
-  date = colDef(name = "Date"),
+  date = colDef(name = "Date", format = colFormat(date = TRUE, locales = "en-GB")),
   event_title = colDef(name = "Event"),
   participants = colDef(name = "Number of Participants",
-                        align = "center",
-                        footer = function(values) sum(values),
-                        filterable = FALSE)),
-  defaultColDef = colDef(footerStyle = list(fontWeight = "bold")),
-filterable = TRUE,
-# minRows = 10,
-# defaultPageSize = 10,
-width = "100%",
-height = "100%", 
+                        align = "center" #,
+                        # footer = function(values) sum(values)
+                        ),
+  n = colDef(name = "Number Ministries Represented",
+             align = "center",
+             na = "NA")),
+  # defaultColDef = colDef(footerStyle = list(fontWeight = "bold")),
+# filterable = TRUE,
+width = 700,
+height = "100%",
 # pagination = FALSE,
 showPageSizeOptions = TRUE,
-pageSizeOptions = c(6, 12, 24),
-defaultPageSize = 6,
-minRows = 6,
-# fullWidth = FALSE,
+# pageSizeOptions = c(10, 20, 50),
+defaultPageSize = 10,
+minRows = 10,
 highlight = TRUE,
 striped = TRUE)
+)
 ```
 
+
+```{r, include=FALSE}
+border_format <- fp_border(color = "gray30", width = 2)
+
+ft_table <- table_df %>%
+  flextable() %>%
+  set_header_labels(
+    event_type = "Event Type",
+    date =  "Date",
+    event_title = "Event",
+    participants = "Number of Participants",
+    n = "Number Ministries Represented"
+  ) %>%
+  set_table_properties(width = .7, layout = "autofit") %>%
+  theme_zebra(odd_header = "transparent", even_header = "transparent") %>%
+  align(align = "left", part = "header") %>%
+  align(align = "left", part = "body") %>%
+  hline_bottom(part = "header", border = border_format) %>%
+  hline_top(part = "header", border = border_format) %>%
+  hline_bottom(part = "all", border = border_format)
+
+ft_table
+
+```
 
 
 About
