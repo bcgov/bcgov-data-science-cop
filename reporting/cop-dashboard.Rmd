@@ -112,6 +112,7 @@ valueBox(value = num_locations, icon = "fa-globe")
 ```{r}
 #number of ministries
 valueBox(value = participation_by_ministry %>% 
+           filter(ministry != "Unknown") %>% 
   distinct(ministry) %>% 
   count(), icon = "fa-building")
 ```
@@ -261,6 +262,7 @@ ggplot(data = participation_sum, aes(year, total_part)) +
 ```{r}
 #number of participants by Ministry
 num_by_min <- participation_by_ministry %>% 
+  filter(ministry != "Unknown") %>% 
   select(number_participants) %>% 
   sum()
 
@@ -270,6 +272,7 @@ get_palette_waffle <-  colorRampPalette(brewer.pal(12, "Paired"))
 
 #waffle plot
 participation_by_ministry %>%
+  filter(ministry != "Unknown") %>% 
   group_by(ministry) %>%
   summarise(count = sum(number_participants)) %>%
   ggplot(aes(fill = ministry, values = count)) +
@@ -612,7 +615,7 @@ striped = TRUE)
 ```
 
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 border_format <- fp_border(color = "gray30", width = 2)
 
 ft_table <- table_df %>%
@@ -633,7 +636,6 @@ ft_table <- table_df %>%
   hline_bottom(part = "all", border = border_format)
 
 ft_table
-
 ```
 
 
