@@ -26,18 +26,18 @@ library(officer)
 
 ## Variables -------------------------------------------------------------------
 
-# if(.Platform$OS.type == "windows"){
+if(.Platform$OS.type == "windows"){
 lanpath
-# }
-# 
-# ## Note: the file share must be mounted on your local filesystem
-# if(.Platform$OS.type == "unix"){
-#   ## Macbook path
+}
+
+## Note: the file share must be mounted on your local filesystem
+if(.Platform$OS.type == "unix"){
+  ## Macbook path
 lanpath
-# }
+}
 
 ## path no LAN
-lan_data_dir <- paste0(here::here(), "/reporting/data")
+# lan_data_dir <- paste0(here::here(), "/reporting/data")
 
 
 ## Load ------------------------------------------------------------------------
