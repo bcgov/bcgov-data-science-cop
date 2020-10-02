@@ -616,6 +616,8 @@ striped = TRUE)
 
 
 ```{r, include=FALSE, eval=FALSE}
+library(officer)
+
 border_format <- fp_border(color = "gray30", width = 2)
 
 ft_table <- table_df %>%
