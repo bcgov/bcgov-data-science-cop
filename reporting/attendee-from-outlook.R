@@ -28,9 +28,10 @@ library(readr)
 attendees_raw <- read_delim(clipboard(), delim = "\t")
 
 attendees <- attendees_raw %>%
-  filter(str_detect(Name, ':EX')) %>%
+  filter(Response %in% c("Tentative", "Accepted")) %>% 
+  filter(str_detect(Name, ":EX")) %>%
   mutate(ministry = sub(".*\\s", "", trimws(Name))) %>%
-  mutate(ministry = gsub(":EX","", ministry))
+  mutate(ministry = gsub(":EX", "", ministry))
 
 by_ministry <- attendees %>%
   count(ministry)
