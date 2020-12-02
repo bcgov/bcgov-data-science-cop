@@ -28,12 +28,11 @@ Our `<bcgov/code_together>` events will be fully remote through the bcgov Data S
 
 
 ### Upcoming Data Science Events
- - Stay tuned for upcoming webinars in Fall 2020
+ - Stay tuned for 2021 events
 
 
-### Past Data Science Events
+### Some Past Data Science Events
  - [bcdata: An R package to help make open data part of your data science workflow (Webinar, 26 March 2020)](https://bcgov.github.io/bcgov-rstats-public-presentations/2020-03-26_bcdata_lunch_and_learn/bcdata-2020-lunch-and-learn.html#1)
- - Can the Data Speak? Reflections on Unsupervised Classification in the Python Language with Accessible Examples (Webinar, 11 March 2020)
  - [Introduction to Data Science using R (Online, 6-7 May 2020)](https://github.com/bcgov/ds-intro-to-r-2-day)
  - [FLNRO-sponsered bcgov North Area R Geospatial Workshop & Hackathon (Prince George, 5-8 November 2019)](https://github.com/bcgov/bcgov-r-geo-workshop)
  - [Introduction to Data Science using R (Victoria, 2 October 2019)](https://github.com/bcgov/ds-cop-intro-to-r)
