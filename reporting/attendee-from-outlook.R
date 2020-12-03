@@ -26,8 +26,8 @@ attendees_raw <- read_delim(clipboard(), delim = "\t")
 
 attendees <- attendees_raw %>%
   filter(Response %in% c("Tentative", "Accepted")) %>% 
-  filter(str_detect(Name, ":EX")) %>%
-  mutate(ministry = sub(".*\\s", "", trimws(Name))) %>%
+  mutate(ministry = ifelse(str_detect(Name, ":EX"), Name, 'External')) %>%
+  mutate(ministry = sub(".*\\s", "", trimws(ministry))) %>%
   mutate(ministry = gsub(":EX", "", ministry))
 
 by_ministry <- attendees %>%
