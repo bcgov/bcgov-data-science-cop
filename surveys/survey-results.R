@@ -20,29 +20,16 @@ library(stringr)
 library(tidyr)
 library(ggplot2)
 library(here)
-
-# Variables --------------------------------------------------------------------
-
-if(.Platform$OS.type == "windows"){
-lanpath
-}
-
-## Note: the file share must be mounted on your local filesystem
-if(.Platform$OS.type == "unix"){
-  ## Macbook path
-lanpath
-}
+library(safepaths) ## https://github.com/bcgov/safepaths
 
 
-# Load -------------------------------------------------------------------------
+# Load & Tidy  -----------------------------------------------------------------
+results <- read_csv(use_network_path("7. Data Science CoP/surveys/results-survey424739 - final.csv"),
+                    col_types = c("cccccccccccccccccccccccccc")) %>%
+           clean_names()
 
-# results <- read_csv(file.path(lan_data_dir, "results-survey424739 - final.csv"),
-#                     col_types = c("cccccccccccccccccccccccccc")) %>% 
-#            clean_names()
-# 
 # write_csv(results, "surveys/tmp/survey_results.csv")
-results <- read_csv(here::here("surveys/tmp/survey_results.csv"))
-
+# results <- read_csv(here::here("surveys/tmp/survey_results.csv"))
 
 # Munging ----------------------------------------------------------------------
 
