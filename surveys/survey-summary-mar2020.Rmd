@@ -31,6 +31,11 @@ library(tidyr)
 library(ggplot2)
 library(here)
 library(kableExtra)
+library(safepaths) ## https://github.com/bcgov/safepaths
+
+# results <- read_csv(use_network_path("7. Data Science CoP/surveys/results-survey424739 - final.csv"),
+#                     col_types = c("cccccccccccccccccccccccccc")) %>%
+#            clean_names()
 
 results <- read_csv(here::here("surveys/tmp/survey_results.csv"))
 
