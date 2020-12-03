@@ -22,32 +22,17 @@ library(ggplot2)
 library(waffle)
 library(RColorBrewer)
 library(officer)
-
-
-## Variables -------------------------------------------------------------------
-
-if(.Platform$OS.type == "windows"){
-lanpath
-}
-
-## Note: the file share must be mounted on your local filesystem
-if(.Platform$OS.type == "unix"){
-  ## Macbook path
-lanpath
-}
-
-## path no LAN
-# lan_data_dir <- paste0(here::here(), "/reporting/data")
-
+library(safepaths) ## https://github.com/bcgov/safepaths
 
 ## Load ------------------------------------------------------------------------
 
-event_part <- read_csv(file.path(lan_data_dir, "cop-data-events.csv"), col_types = c("ccddDccdc")) %>% 
+event_part <- read_csv(use_network_path("7. Data Science CoP/data/cop-data-events.csv"),
+           col_types = c("ccddDccdc")) %>%
   clean_names()
 
-part_by_min <- read_csv(file.path(lan_data_dir, "cop-data-part-ministries.csv"), col_types = c("cDdcc")) %>% 
+part_by_min <- read_csv(use_network_path("7. Data Science CoP/data/cop-data-part-ministries.csv"),
+           col_types = c("cDdcc")) %>%
   clean_names()
-
 
 
 ## Munging ---------------------------------------------------------------------
