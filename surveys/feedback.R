@@ -20,23 +20,12 @@ library(stringr)
 library(tidyr)
 library(ggplot2)
 library(here)
-
-# Variables --------------------------------------------------------------------
-
-if(.Platform$OS.type == "windows"){
-lanpath
-}
-
-## Note: the file share must be mounted on your local filesystem
-if(.Platform$OS.type == "unix"){
-  ## Macbook path
-lanpath
-}
+library(safepaths) ## https://github.com/bcgov/safepaths
 
 
 # Load -------------------------------------------------------------------------
 
-feedback <- read_csv(file.path(lan_data_dir, "2020-05-06_intro-ds-r/Introduction to Data Science with R Online Workshop.csv")) %>%
+feedback <- read_csv(use_network_path("7. Data Science CoP/training-events/2020-05-06_intro-ds-r/Introduction to Data Science with R Online Workshop.csv")) %>%
            clean_names()
 
 feedback_plot <- feedback %>% 
