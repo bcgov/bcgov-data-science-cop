@@ -41,13 +41,17 @@ event_participation <-
            col_types = c("ccddDccdc")) %>%
   clean_names()
 
-participation_by_min <-
+participation_by_ministry <-
   read_csv(use_network_path("7. Data Science CoP/data/cop-data-part-ministries.csv"),
            col_types = c("cDdcc")) %>%
   clean_names()
 
 workshop_feedback <-  read_csv(use_network_path("7. Data Science CoP/data/cop-training-survey-feedback.csv"),
            col_types = c("ccdDccddddddddddddcc")) %>%
+  clean_names()
+
+org_acronyms <- read_csv(use_network_path("7. Data Science CoP/data/ministry-name-abbrevation.csv"),
+           col_types = c("cc")) %>%
   clean_names()
 ```
 
@@ -95,12 +99,12 @@ num_locations <- event_participation %>%
 valueBox(value = num_locations, icon = "fa-globe")
 ```
 
-### Number of Ministries Represented (All Time) {.value-box}
+### Number of Ministries & Organizations Represented (All Time) {.value-box}
 
 ```{r}
 #number of ministries
 valueBox(value = participation_by_ministry %>% 
-           filter(ministry != "Unknown") %>% 
+          filter(!ministry %in% c("Unknown", "External")) %>% 
   distinct(ministry) %>% 
   count(), icon = "fa-building")
 ```
@@ -137,27 +141,18 @@ theme_bar <- theme(
 
 #bar chart of number of events
 ggplot(data = event_sum, aes(year, n)) +
-  geom_rect(
-    aes(
-      xmin = 2020 - 0.45,
-      xmax = 2020 + 0.45,
-      ymin = 0,
-      ymax = 15
-    ),
-    alpha = 0.1,
-    fill = "grey90"
-  ) +
+  geom_hline(yintercept = 15, linetype = 2, colour = "grey50") +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   labs(
     x = NULL,
     y = NULL
   ) +
-  geom_text(aes(x = 2020, y = 14.4,
+  geom_text(aes(x = 2019.3, y = 15.7,
                 label = "2020 Goal"),
             size = 4, colour = "grey20") +
   scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 15),
-                     breaks = seq(0, 15, 3)) +
+                     limits = c(0, 20),
+                     breaks = seq(0, 20, 3)) +
   scale_fill_manual(name = NULL,
                     values = event_colours) +
   theme_minimal() +
@@ -218,39 +213,30 @@ event_sum <- participation_sum %>%
 
 #bar chart of number of participants
 ggplot(data = participation_sum, aes(year, total_part)) +
-  geom_rect(
-    aes(
-      xmin = 2020 - 0.45,
-      xmax = 2020 + 0.45,
-      ymin = 0,
-      ymax = 400
-    ),
-    alpha = 0.1,
-    fill = "grey90"
-  ) +
+  geom_hline(yintercept = 400, linetype = 2, colour = "grey50") +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   labs(
     x = NULL,
     y = NULL
   ) +
-  geom_text(aes(x = 2020, y = 385,
+  geom_text(aes(x = 2019.3, y = 420,
                 label = "2020 Goal"),
             size = 4, colour = "grey20") +
   scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 400),
-                     breaks = seq(0, 400, 50)) +
+                     limits = c(0, 600),
+                     breaks = seq(0, 600, 50)) +
   scale_fill_manual(name = NULL,
                     values = event_colours) +
   theme_minimal() +
   theme_bar
 ```
 
-### Attendance by Ministry
+### Attendance by Ministry or Organization
 
 ```{r}
 #number of participants by Ministry
 num_by_min <- participation_by_ministry %>% 
-  filter(ministry != "Unknown") %>% 
+  filter(!ministry %in% c("Unknown", "External")) %>% 
   select(number_participants) %>% 
   sum()
 
@@ -260,20 +246,22 @@ get_palette_waffle <-  colorRampPalette(brewer.pal(12, "Paired"))
 
 #waffle plot
 participation_by_ministry %>%
-  filter(ministry != "Unknown") %>% 
-  group_by(ministry) %>%
+  left_join(org_acronyms, by = "ministry") %>% 
+  filter(!ministry %in% c("Unknown", "External")) %>% 
+  # mutate(ministry = stringr::str_wrap(ministry, 45)) %>% 
+  group_by(abbreviation) %>%
   summarise(count = sum(number_participants)) %>%
-  ggplot(aes(fill = ministry, values = count)) +
-  geom_waffle(rows = 9) +
+  ggplot(aes(fill = abbreviation, values = count)) +
+  geom_waffle(rows = 10) +
   scale_fill_manual(values = get_palette_waffle(colour_count_waffle),
                     name = NULL) +
   coord_equal() +
   theme_enhance_waffle() +
   theme_void() +
   theme(
-    legend.position = "bottom",
+    legend.position = "top",
     legend.text = element_text(size = 8)) +
-  guides(fill = guide_legend(ncol = 2, bycol = TRUE))
+  guides(fill = guide_legend(nrow = 4))
 ```
 
 
@@ -362,27 +350,18 @@ training_sum <- participation_count %>%
 
 #bar chart of number of events
 ggplot(data = training_sum, aes(year, n)) +
-  geom_rect(
-    aes(
-      xmin = 2020 - 0.45,
-      xmax = 2020 + 0.45,
-      ymin = 0,
-      ymax = 6
-    ),
-    alpha = 0.1,
-    fill = "grey90"
-  ) +
+  geom_hline(yintercept = 6, linetype = 2, colour = "grey50") +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   labs(
     x = NULL,
     y = NULL
   ) +
-  geom_text(aes(x = 2020, y = 5.6,
+  geom_text(aes(x = 2019.3, y = 6.3,
                 label = "2020 Goal"),
             size = 4, colour = "grey20") +
   scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 6),
-                     breaks = seq(0, 6, 2)) +
+                     limits = c(0, 7),
+                     breaks = seq(0, 7, 2)) +
   scale_fill_manual(name = NULL,
                     values = event_colours) +
   theme_minimal() +
@@ -406,19 +385,21 @@ theme_bar_horiz <- theme(
 #number participants by topic
 participation_count %>%
   filter(event_type %in% c("workshop", "webinar")) %>% 
-  group_by(event_title, event_type) %>% 
+  mutate(event_title2 = case_when(event_type == "webinar" ~ "data-science-cop-webinar",
+                                  TRUE ~ event_title)) %>% 
+  group_by(event_title2, event_type) %>% 
   summarise(total_trained = sum(participants),
             no_times_offered = n()) %>% 
-  ggplot(aes(total_trained, event_title)) +
+  ggplot(aes(total_trained, event_title2)) +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   scale_fill_manual(name = NULL,
                     values = event_colours) +
   geom_text(aes(label = paste0("(", no_times_offered, ")")),
-            nudge_x = 5, colour = "grey30", size = 4) +
+            nudge_x = 22, colour = "grey30", size = 4) +
   labs(x = NULL, y = NULL) +
   scale_x_continuous(expand = c(0, 0),
-                     limits = c(0, 130),
-                     breaks = seq(0, 120, 20)) +
+                     limits = c(0, 500),
+                     breaks = seq(0, 450, 50)) +
   theme_minimal() +
   theme_bar_horiz
 ```
@@ -585,7 +566,7 @@ bscols(
                         align = "center" #,
                         # footer = function(values) sum(values)
                         ),
-  n = colDef(name = "Number Ministries Represented",
+  n = colDef(name = "Number of Ministries/Organizations",
              align = "center",
              na = "NA")),
   # defaultColDef = colDef(footerStyle = list(fontWeight = "bold")),
