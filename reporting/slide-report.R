@@ -34,6 +34,10 @@ part_by_min <- read_csv(use_network_path("7. Data Science CoP/data/cop-data-part
            col_types = c("cDdcc")) %>%
   clean_names()
 
+org_acronyms <- read_csv(use_network_path("7. Data Science CoP/data/ministry-name-abbrevation.csv"),
+           col_types = c("cc")) %>%
+  clean_names()
+
 
 ## Munging ---------------------------------------------------------------------
 
@@ -76,18 +80,18 @@ num_trained <- part_count %>%
 #   summarise(mean(waiting_list, na.rm = TRUE))
 
 
-#number of Ministries
+#number of Ministries/Organizations
 part_by_min %>% 
   distinct(ministry) %>% 
+  filter(!ministry %in% c("Unknown", "External")) %>% 
   count()
 
 
 #number of participants by Ministry
 num_by_min <- part_by_min %>%
-  filter(ministry != "Unknown") %>% 
+  filter(!ministry %in% c("Unknown", "External")) %>% 
   select(number_participants) %>% 
   sum()
-
 
 
 ## Plotting --------------------------------------------------------------------
@@ -101,15 +105,16 @@ getPalette <-  colorRampPalette(brewer.pal(9, "Set1"))
 
 #waffle plot
 waffle_plot <- part_by_min %>%
-  filter(ministry != "Unknown") %>% 
-  group_by(ministry) %>%
+  filter(!ministry %in% c("Unknown", "External")) %>% 
+  mutate(ministry2 = stringr::str_wrap(ministry, 45)) %>% 
+  group_by(ministry2) %>%
   summarise(count = sum(number_participants)) %>%
-  ggplot(aes(fill = ministry, values = count)) +
-  geom_waffle(n_rows = 7) +
+  ggplot(aes(fill = ministry2, values = count)) +
+  geom_waffle(n_rows = 10) +
   scale_fill_manual(values = getPalette(colourCount), name = NULL) +
   coord_equal() +
   labs(
-    title = "CoP Participation Numbers by Ministry",
+    title = "CoP Participation Numbers by Ministry or Organization",
     subtitle = paste0(
       "(based on ",
       num_by_min,
@@ -123,17 +128,18 @@ waffle_plot <- part_by_min %>%
     plot.title = element_text(hjust = .07, face = "bold"),
     plot.subtitle = element_text(hjust = .07, face = "italic", size = 10)
   ) +
-  guides(fill = guide_legend(ncol = 2, bycol = TRUE))
+  guides(fill = guide_legend(ncol = 3, bycol = TRUE))
 
 
-## Outputs ---------------------------------------------------------------------
+## Outputs --------------------------------------------------------------------
 
 
 #save waffle chart as png
 ggsave("reporting/out/cop-report-waffle.png", 
-       waffle_plot,
+       waffle_plot_png,
        width = 18,
        height = 9)
+
 
 #pptx CoP reporting slide
 top_text <- fpar(
@@ -141,7 +147,7 @@ top_text <- fpar(
           prop = fp_text(bold = FALSE,
                          font.size = 40)),
     ftext(paste0(num_events, " events, including ", num_train_events,
-                         " training sessions\n", num_part, " participants overall, ",
+                         " training sessions (workshops & webinars)\n", num_part, " participants overall, ",
                          num_trained, " attended training sessions"),
           prop = fp_text(font.size = 16, color = "grey30")),
     fp_p = fp_par(text.align = "center"))
@@ -151,7 +157,7 @@ summary_slide <- read_pptx()  %>%
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
   ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "August 2018 - September 2020", location = ph_location_type(type = "ftr")) 
+  ph_with(value = "August 2018 - December 2020", location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/out/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
