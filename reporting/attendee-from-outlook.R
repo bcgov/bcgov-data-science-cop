@@ -17,18 +17,24 @@ library(stringr)
 library(forcats)
 library(hrbrthemes)
 library(readr)
+library(safepaths)
 
 ## navigate to event in your calendar.
 ## Go to the 'tracking' tab
 ## Click button labelled 'Copy Status to Clipboard'
 ## Run code below to read from clipboard into R
 attendees_raw <- read_delim(clipboard(), delim = "\t")
+crosswalk_file <- use_network_path('7. Data Science CoP/data/ministry-name-abbrevation.csv')
+
+## read in crosswalk table
+min_abbr <- read_csv(crosswalk_file, col_types = c("cc"))
 
 attendees <- attendees_raw %>%
   filter(Response %in% c("Tentative", "Accepted")) %>% 
-  mutate(ministry = ifelse(str_detect(Name, ":EX"), Name, 'External')) %>%
-  mutate(ministry = sub(".*\\s", "", trimws(ministry))) %>%
-  mutate(ministry = gsub(":EX", "", ministry))
+  mutate(abbreviation = ifelse(str_detect(Name, ":EX"), Name, 'External')) %>%
+  mutate(abbreviation = sub(".*\\s", "", trimws(abbreviation))) %>%
+  mutate(abbreviation = gsub(":EX", "", abbreviation)) %>% 
+  left_join(min_abbr, by = c("abbreviation"))
 
 by_ministry <- attendees %>%
   count(ministry)
