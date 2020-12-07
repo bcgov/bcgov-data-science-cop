@@ -499,7 +499,9 @@ p <- tidy_feedback %>%
                     na.value = "black") +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
-  theme_bar_horiz
+  theme_bar_horiz +
+  theme(legend.position = "right",
+        legend.direction = "vertical")
 p
 
 # ggplotly(p)
@@ -524,7 +526,9 @@ tidy_feedback %>%
                     na.value = "black") +
   labs(x = NULL, y = NULL) +
   theme_minimal() +
-  theme_bar_horiz
+  theme_bar_horiz +
+  theme(legend.position = "right",
+        legend.direction = "vertical")
 ```
 
 
