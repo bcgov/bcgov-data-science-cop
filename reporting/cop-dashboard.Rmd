@@ -206,10 +206,10 @@ participation_sum <- participation_count %>%
             total_event = length(event_type)) 
 
 #total events & participants per year
-event_sum <- participation_sum %>% 
-  group_by(year) %>% 
-  summarise(num_events = sum(total_event),
-            total_part = sum(total_part))
+# event_sum <- participation_sum %>% 
+#   group_by(year) %>% 
+#   summarise(num_events = sum(total_event),
+#             total_part = sum(total_part))
 
 #bar chart of number of participants
 ggplot(data = participation_sum, aes(year, total_part)) +
