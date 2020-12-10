@@ -86,7 +86,7 @@ p <- ggplot() +
   labs(
     title = "bcgov Data Science Community of Practice Annual Participation",
     x = NULL,
-    y = NULL
+    y = "Number of Participants"
   ) +
   scale_y_continuous(expand = c(0, 0),
                      limits = c(0, 600),
