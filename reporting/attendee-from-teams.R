@@ -31,6 +31,7 @@ library(tools)
 library(lubridate)
 library(janitor)
 library(dplyr)
+library(stringr)
 
 ## Set the raw path
 raw_participants_path <- use_network_path('7. Data Science CoP/data/raw-participants/')
@@ -41,9 +42,12 @@ csv_paths <- list.files(raw_participants_path, pattern = "*.csv", full.names = T
 
 ## read in raw MS Teams data
 raw_participants <- map_df(csv_paths, ~ {
-  d <- read_csv(.x, col_types = c("ccc"))
+  d <- read_csv(.x, col_types = c("ccc"), col_select = c("Full Name", "Timestamp"))
   d$Timestamp <- mdy_hms(d$Timestamp, tz = "America/Vancouver")
+  d$Date <- as.Date(d$Timestamp)
+  d$Timestamp <- NULL
   d$event <- file_path_sans_ext(basename(.x))
+  distinct(d, .keep_all = TRUE)
   clean_names(d)
 })
 
@@ -52,7 +56,6 @@ min_abbr <- read_csv(crosswalk_file, col_types = c("cc"))
 
 ## Calculate counts by ministry
 count_by_ministry <- raw_participants %>% 
-  mutate(date = as.Date(timestamp)) %>% 
   mutate(abbreviation = ifelse(str_detect(full_name, ":EX"), full_name, 'External')) %>%
   mutate(abbreviation = sub(".*\\s", "", trimws(abbreviation))) %>%
   mutate(abbreviation = gsub(":EX", "", abbreviation)) %>% 
@@ -64,5 +67,6 @@ count_by_ministry <- raw_participants %>%
 ## Total number of the event
 total_by_event <- count_by_ministry %>% 
   group_by(event, date) %>% 
-  summarise(n = sum(n))
+  summarise(n = sum(n)) %>% 
+  relocate(n, .before = date)
 
