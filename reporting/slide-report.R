@@ -138,7 +138,7 @@ waffle_plot <- part_by_min %>%
 
 #save waffle chart as png
 ggsave("reporting/out/cop-report-waffle.png", 
-       waffle_plot_png,
+       waffle_plot,
        width = 18,
        height = 9)
 
