@@ -159,7 +159,10 @@ summary_slide <- read_pptx()  %>%
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
   ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "August 2018 - September 2021", location = ph_location_type(type = "ftr")) 
+  ph_with(value = paste("August 2018 to", month(Sys.Date(), label = TRUE, abbr = FALSE), year(Sys.Date())), location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/out/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
+
+
+  
