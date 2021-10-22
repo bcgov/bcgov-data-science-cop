@@ -24,6 +24,8 @@ library(RColorBrewer)
 library(officer)
 library(safepaths) ## https://github.com/bcgov/safepaths
 
+dir.create("reporting/out", showWarnings = FALSE)
+
 ## Load ------------------------------------------------------------------------
 
 event_part <- read_csv(use_network_path("7. Data Science CoP/data/cop-data-events.csv"),
