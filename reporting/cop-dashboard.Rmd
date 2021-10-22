@@ -28,7 +28,6 @@ library(waffle)
 library(RColorBrewer)
 library(plotly)
 library(safepaths) ## https://github.com/bcgov/safepaths
-
 library(reactable)
 library(htmltools)
 library(crosstalk)
@@ -623,7 +622,7 @@ Row {data-height=300}
 
 
 ```{r, fig.width=3, fig.height=2}
-knitr::include_graphics("data/cop-logo-updated.png") 
+knitr::include_graphics(safepaths::use_network_path("7. Data Science CoP/CoP-logo-sticker/cop-logo-updated.png")) 
 ```
 
 The **Data Science Community of Practice (CoP)** was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate, share and learn about data science. The community exists online&mdash;and sometimes in-person&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.  
