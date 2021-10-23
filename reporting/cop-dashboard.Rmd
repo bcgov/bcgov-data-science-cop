@@ -24,7 +24,7 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(waffle)
+library(waffle) #dev version remotes::install_github("hrbrmstr/waffle")
 library(RColorBrewer)
 library(plotly)
 library(safepaths) ## https://github.com/bcgov/safepaths
@@ -32,6 +32,7 @@ library(reactable)
 library(htmltools)
 library(crosstalk)
 library(flextable)
+library(treemap)
 
 
 ## load data
@@ -140,15 +141,11 @@ theme_bar <- theme(
 
 #bar chart of number of events
 ggplot(data = event_sum, aes(year, n)) +
-  geom_hline(yintercept = 15, linetype = 2, colour = "grey50") +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   labs(
     x = NULL,
     y = NULL
   ) +
-  geom_text(aes(x = 2019.3, y = 15.7,
-                label = "2020 Goal"),
-            size = 4, colour = "grey20") +
   scale_y_continuous(expand = c(0, 0),
                      limits = c(0, 20),
                      breaks = seq(0, 20, 3)) +
@@ -204,23 +201,13 @@ participation_sum <- participation_count %>%
   summarise(total_part = sum(participants),
             total_event = length(event_type)) 
 
-#total events & participants per year
-# event_sum <- participation_sum %>% 
-#   group_by(year) %>% 
-#   summarise(num_events = sum(total_event),
-#             total_part = sum(total_part))
-
 #bar chart of number of participants
 ggplot(data = participation_sum, aes(year, total_part)) +
-  geom_hline(yintercept = 400, linetype = 2, colour = "grey50") +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   labs(
     x = NULL,
     y = NULL
   ) +
-  geom_text(aes(x = 2019.3, y = 420,
-                label = "2020 Goal"),
-            size = 4, colour = "grey20") +
   scale_y_continuous(expand = c(0, 0),
                      limits = c(0, 600),
                      breaks = seq(0, 600, 50)) +
@@ -233,34 +220,48 @@ ggplot(data = participation_sum, aes(year, total_part)) +
 ### Attendance by Ministry or Organization
 
 ```{r}
-#number of participants by Ministry
-num_by_min <- participation_by_ministry %>% 
-  filter(!ministry %in% c("Unknown", "External")) %>% 
-  select(number_participants) %>% 
-  sum()
-
 #waffle colour palette
-colour_count_waffle <-  length(unique(participation_by_ministry$ministry))
-get_palette_waffle <-  colorRampPalette(brewer.pal(12, "Paired"))
+# colour_count_waffle <-  length(unique(participation_by_ministry$ministry))
+# get_palette_waffle <-  colorRampPalette(brewer.pal(12, "Paired"))
 
 #waffle plot
-participation_by_ministry %>%
-  left_join(org_acronyms, by = "ministry") %>% 
-  filter(!ministry %in% c("Unknown", "External")) %>% 
-  # mutate(ministry = stringr::str_wrap(ministry, 45)) %>% 
+# participation_by_ministry %>%
+#   left_join(org_acronyms, by = "ministry") %>% 
+#   filter(!ministry %in% c("Unknown", "External")) %>% 
+#   # mutate(ministry = stringr::str_wrap(ministry, 45)) %>% 
+#   group_by(abbreviation) %>%
+#   summarise(count = sum(number_participants)) %>%
+#   ggplot(aes(fill = abbreviation, values = count)) +
+#   geom_waffle(rows = 10) +
+#   scale_fill_manual(values = get_palette_waffle(colour_count_waffle),
+#                     name = NULL) +
+#   coord_equal() +
+#   theme_enhance_waffle() +
+#   theme_void() +
+#   theme(
+#     legend.position = "bottom",
+#     legend.text = element_text(size = 8)) +
+#   guides(fill = guide_legend(nrow = 6))
+
+#treemap
+df <- participation_by_ministry %>%
+  left_join(org_acronyms, by = "ministry") %>%
+  filter(!ministry %in% c("Unknown", "External")) %>%
   group_by(abbreviation) %>%
-  summarise(count = sum(number_participants)) %>%
-  ggplot(aes(fill = abbreviation, values = count)) +
-  geom_waffle(rows = 10) +
-  scale_fill_manual(values = get_palette_waffle(colour_count_waffle),
-                    name = NULL) +
-  coord_equal() +
-  theme_enhance_waffle() +
-  theme_void() +
-  theme(
-    legend.position = "top",
-    legend.text = element_text(size = 8)) +
-  guides(fill = guide_legend(nrow = 4))
+  summarise(count = sum(number_participants))
+
+treemap(
+  df,
+  index = "abbreviation",
+  vSize = "count",
+  type = "index",
+  fontsize.labels = 8,
+  force.print.labels = TRUE,
+  fontface.labels = "plain",
+  border.lwds = .5,
+  title = "",
+  palette = brewer.pal(12, "Paired")
+)
 ```
 
 
@@ -346,23 +347,22 @@ training_sum <- participation_count %>%
   group_by(year, event_type) %>% 
   count()
 
+#training event colours
+training_colours = c("webinar" = "#ff7f00",
+                  "workshop" = "#33a02c")
 
 #bar chart of number of events
 ggplot(data = training_sum, aes(year, n)) +
-  geom_hline(yintercept = 6, linetype = 2, colour = "grey50") +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   labs(
     x = NULL,
     y = NULL
   ) +
-  geom_text(aes(x = 2019.3, y = 6.3,
-                label = "2020 Goal"),
-            size = 4, colour = "grey20") +
   scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 7),
-                     breaks = seq(0, 7, 2)) +
+                     limits = c(0, 12),
+                     breaks = seq(0, 12, 2)) +
   scale_fill_manual(name = NULL,
-                    values = event_colours) +
+                    values = training_colours) +
   theme_minimal() +
   theme_bar
 ```
@@ -389,16 +389,16 @@ participation_count %>%
   group_by(event_title2, event_type) %>% 
   summarise(total_trained = sum(participants),
             no_times_offered = n()) %>% 
-  ggplot(aes(total_trained, event_title2)) +
+  ggplot(aes(total_trained, reorder(event_title2, -total_trained))) +
   geom_col(aes(fill = event_type), alpha = 0.6) +
   scale_fill_manual(name = NULL,
-                    values = event_colours) +
+                    values = training_colours) +
   geom_text(aes(label = paste0("(", no_times_offered, ")")),
-            nudge_x = 22, colour = "grey30", size = 4) +
+            nudge_x = 50, colour = "grey30", size = 4) +
   labs(x = NULL, y = NULL) +
   scale_x_continuous(expand = c(0, 0),
-                     limits = c(0, 500),
-                     breaks = seq(0, 450, 50)) +
+                     limits = c(0, 950),
+                     breaks = seq(0, 900, 150)) +
   theme_minimal() +
   theme_bar_horiz
 ```
