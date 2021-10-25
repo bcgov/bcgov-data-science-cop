@@ -173,7 +173,9 @@ event_locations <- event_participation %>%
   sf::st_as_sf()
 
 #plot in-person event locations
-ggplot(data = event_locations) +
+event_locations %>% 
+  filter(location != "remote") %>% 
+  ggplot() +
   geom_sf(data = bcmaps::bc_bound(class = "sf"), fill = "white") +
   geom_sf(colour = "#33a02c", size = 3) +
   geom_sf_text(aes(label = location),
