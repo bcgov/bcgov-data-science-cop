@@ -210,7 +210,7 @@ ggplot(data = participation_sum, aes(year, total_part)) +
   ) +
   scale_y_continuous(expand = c(0, 0),
                      limits = c(0, 600),
-                     breaks = seq(0, 600, 50)) +
+                     breaks = seq(0, 600, 100)) +
   scale_fill_manual(name = NULL,
                     values = event_colours) +
   theme_minimal() +
@@ -617,19 +617,24 @@ About
 ======================================================================
 
 
-Row {data-height=300}
+Row {data-height=75}
 -----------------------------------------------------------------------
 
+The **Data Science Community of Practice (CoP)** was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate, share and learn about data science. The community exists online&mdash;and sometimes in-person&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.  
 
-```{r, fig.width=3, fig.height=2}
+Row {data-height=200}
+-----------------------------------------------------------------------
+
+```{r, fig.width=3, fig.height=3}
 knitr::include_graphics(safepaths::use_network_path("7. Data Science CoP/CoP-logo-sticker/cop-logo-updated.png")) 
 ```
 
-The **Data Science Community of Practice (CoP)** was launched in August 2018 as a venue for data science enthusiasts across the B.C. government to connect, communicate, share and learn about data science. The community exists online&mdash;and sometimes in-person&mdash;with a focus on sharing practices, inspiring each other and supporting continuous learning in data science in the BC Public Service.  
-&nbsp;\
+Row {data-height=100}
+-----------------------------------------------------------------------
+
 • **Join** the bcgov Data Science Community of Practice online in bcgov Yammer and MS Teams  
 • **Read** blog posts about past & future bcgov Data Science Community of Practice events on @Work  
-• **Find** bcgov Data Science Community of Practice materials & resources on [bcgov GitHub](https://github.com/bcgov/bcgov-data-science-cop)  
+• **Find** bcgov Data Science Community of Practice materials & resources on [bcgov GitHub](https://github.com/bcgov/bcgov-data-science-cop)
 
 
 
