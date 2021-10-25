@@ -56,7 +56,7 @@ org_acronyms <- read_csv(use_network_path("7. Data Science CoP/data/ministry-nam
 ```
 
 
-Participation
+Event Participation
 ======================================================================
 
 
@@ -404,15 +404,11 @@ participation_count %>%
 ```
 
 
-Workshop Evaluations
-======================================================================
-
-
 Row
 -----------------------------------------------------------------------
 
 
-### Overall  Evaluation: Participant Rating of Excellent + Very Good (Avg All Workshops)
+### Workshop Evaluation: Rating of Excellent + Very Good (Avg All Workshops)
 
 ```{r}
 #percent excellent + very good overall assessment scores (averaged across workshops)
@@ -431,7 +427,7 @@ gauge(metric_overall, min = 0, max = 100, symbol = '%', gaugeSectors(
 #          caption = "Excellent or Very Good Overall Rating (All Workshops)")
 ```
 
-### Organization Evaluation: Participant Rating of Excellent + Very Good (Avg All Workshops)
+### Workshop Organization Evaluation: Rating of Excellent + Very Good (Avg All Workshops)
 
 ```{r}
 #percent excellent + very good organisation assessment scores (averaged across workshops)
@@ -455,7 +451,7 @@ Row
 -----------------------------------------------------------------------
 
 
-### Participant Assessments: Overall Rating by Workshop
+### Workshop Participant Assessments: Overall Rating by Workshop
 
 ```{r}
 tidy_feedback <- workshop_feedback %>%
@@ -506,7 +502,7 @@ p
 # ggplotly(p)
 ```
 
-### Participant Assessments: Organization Rating by Workshop
+### Workshop Participant Assessments: Organization Rating by Workshop
 
 ```{r}
 tidy_feedback %>% 
