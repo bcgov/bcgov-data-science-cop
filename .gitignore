@@ -8,5 +8,6 @@ README.html
 *png
 /surveys/tmp
 *html
+!cop-dashboard.html
 /reporting/data
 /reporting/ship.R
