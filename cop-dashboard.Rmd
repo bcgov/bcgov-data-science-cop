@@ -147,8 +147,8 @@ ggplot(data = event_sum, aes(year, n)) +
     y = NULL
   ) +
   scale_y_continuous(expand = c(0, 0),
-                     limits = c(0, 20),
-                     breaks = seq(0, 20, 3)) +
+                     limits = c(0, 22),
+                     breaks = seq(0, 22, 4)) +
   scale_fill_manual(name = NULL,
                     values = event_colours) +
   theme_minimal() +
