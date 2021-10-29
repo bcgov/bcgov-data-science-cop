@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    source_code: https://github.com/bcgov/bcgov-data-science-cop/blob/master/reporting/cop-dashboard.Rmd
+    source_code: https://github.com/bcgov/bcgov-data-science-cop
 ---
 
 <!--
