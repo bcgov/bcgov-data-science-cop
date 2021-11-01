@@ -16,7 +16,8 @@ The Data Science Community of Practice (CoP) supports data science webinars to p
 
 - [ ] prepare a title, webinar abstract & speaker bio (a banner is optional, but nice!)
 - [ ] set-up MS Teams meeting and copy link/details
-- [ ] advertise in multiple channels (e.g. bcgov Yammer, MS Teams, @Work CoP Group, CITZ & other Communications Teams or newsletters)    
+- [ ] advertise in multiple channels (e.g. bcgov Yammer, MS Teams, @Work CoP Group, CITZ & other Communications Teams or newsletters)
+  - creating an event on the @Work platform creates an .ics (Outlook calendar) file which may be pasted into the other channels
 - [ ] use, communicate & enforce a code of conduct  ([example](https://www.contributor-covenant.org/version/1/4/code-of-conduct/))
 - [ ] have a designated host/moderator to introduce the speaker and support speaker & participants during the webinar  
   - territorial acknowledgment
