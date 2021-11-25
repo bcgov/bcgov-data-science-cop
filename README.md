@@ -4,6 +4,8 @@
 
 This repository is intended to house presentation materials from bcgov Data Science Community of Practice (CoP) and other related bcgov data science events. If you have participated in a bcgov Data Science CoP event and would like to contribute your presentation materials to this repository please open a pull request. Individual events are given their own sub-directory. Please contribute your materials to that sub-directory.
 
+**Note:** bcgov Data Science Community of Practice (CoP) events will be fully remote through the MS Team space until further notice.
+
 ### Why?
 
 To share practices, inspire each other & support continuous learning in data science in the BC Public Service.
@@ -11,24 +13,6 @@ To share practices, inspire each other & support continuous learning in data sci
 ### Resources
 
 **Visit the [bcgov-data-science-resources Wiki](https://github.com/bcgov/bcgov-data-science-resources/wiki)** to find some data science resources for BC Public Servants.
-
-
-### Meet-Up: `<bcgov/code_together>`
-
-The Data Science CoP hosts a monthly opportunity to code together for a couple of hours in the [Exchange Lab](https://www.eventbrite.ca/e/take-a-walk-on-the-agile-side-tour-of-bc-govs-exchange-lab-tickets-43946375793) lobby+kitchen&mdash;an inviting, shared space in Victoria, B.C. Every 3<sup>rd</sup> Friday of the month&mdash;9:30am to 11:30am&mdash;members of the community can meet some other coders and digital experts in bcgov and ask and answer some questions, discuss data science approaches and tools, or simply hunker down with a coffee and get some coding done.
-
-The Exchange Lab 💻🥼🏫  
-3rd floor, lobby/kitchen  
-1012 Douglas Street  
-Victoria, B.C.   
-
-
-_**ATTENTION**_  
-Our `<bcgov/code_together>` events will be fully remote through the bcgov Data Science CoP MS Team space until further notice.
-
-
-### Upcoming Data Science Events
- - Stay tuned for 2021 events
 
 
 ### Some Past Data Science Events

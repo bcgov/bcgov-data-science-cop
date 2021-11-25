@@ -19,10 +19,12 @@ library(lubridate)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(waffle)
+library(waffle) #dev version remotes::install_github("hrbrmstr/waffle")
 library(RColorBrewer)
 library(officer)
 library(safepaths) ## https://github.com/bcgov/safepaths
+
+dir.create("reporting/out", showWarnings = FALSE)
 
 ## Load ------------------------------------------------------------------------
 
@@ -136,7 +138,7 @@ waffle_plot <- part_by_min %>%
 
 #save waffle chart as png
 ggsave("reporting/out/cop-report-waffle.png", 
-       waffle_plot_png,
+       waffle_plot,
        width = 18,
        height = 9)
 
@@ -157,7 +159,10 @@ summary_slide <- read_pptx()  %>%
   add_slide(layout = "Title and Content", master = "Office Theme") %>% 
   ph_with(value = top_text, location = ph_location_type(type = "title")) %>% 
   ph_with(value = waffle_plot, location = ph_location_type(type = "body")) %>% 
-  ph_with(value = "August 2018 - December 2020", location = ph_location_type(type = "ftr")) 
+  ph_with(value = paste("August 2018 to", month(Sys.Date(), label = TRUE, abbr = FALSE), year(Sys.Date())), location = ph_location_type(type = "ftr")) 
 
 print(summary_slide, target = paste0("reporting/out/ds-cop-reporting_", format(Sys.time(), "%Y-%m-%d"), ".pptx")) 
 
+
+
+  
