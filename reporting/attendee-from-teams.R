@@ -51,6 +51,19 @@ raw_participants <- map_df(csv_paths, ~ {
   clean_names(d)
 })
 
+## teams introduced a new format :(
+## going with a manually approach ATM
+path <- csv_paths[1]
+d <- read_csv(path, col_types = c("ccc"), col_select = c("Full Name", "UTC Event Timestamp"))
+d$`UTC Event Timestamp` <- mdy_hms(d$`UTC Event Timestamp`)
+d$Date <- as.Date(d$`UTC Event Timestamp`)
+d$`UTC Event Timestamp` <- NULL
+d$event <- file_path_sans_ext(basename(path))
+distinct(d, .keep_all = TRUE)
+
+## because
+raw_participants <- clean_names(d)
+
 ## read in crosswalk table
 min_abbr <- read_csv(crosswalk_file, col_types = c("cc"))
 
@@ -64,8 +77,12 @@ count_by_ministry <- raw_participants %>%
   count(event, date, ministry) %>% 
   relocate(n, .before = ministry)
 
+## Unknown ministries. This is worth manually checking
+count_by_ministry$ministry[is.na(count_by_ministry$ministry)] <- "Unknown"
+
 ## Total number of the event
 total_by_event <- count_by_ministry %>% 
+  mutate(date = max(date)) |> 
   group_by(event, date) %>% 
   summarise(n = sum(n)) %>% 
   relocate(n, .before = date)
