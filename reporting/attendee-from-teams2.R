@@ -62,4 +62,5 @@ count_by_ministry$org = NA
 count_by_ministry$min_name_raw = NA
 cop_data_file <- read_csv(cop_data_path)
 cop_data_file <- rbind(cop_data_file, count_by_ministry)
+write_csv(cop_data_file, cop_data_path)
 
