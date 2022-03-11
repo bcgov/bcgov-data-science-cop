@@ -624,7 +624,8 @@ Row {data-height=200}
 -----------------------------------------------------------------------
 
 ```{r, fig.width=3, fig.height=3}
-knitr::include_graphics(safepaths::use_network_path("7. Data Science CoP/CoP-logo-sticker/cop-logo-updated.png")) 
+
+knitr::include_graphics(use_network_path("7. Data Science CoP/CoP-logo-sticker/cop-logo-updated.png")) 
 ```
 
 Row {data-height=100}
