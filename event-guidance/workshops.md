@@ -48,7 +48,11 @@ The Data Science Community of Practice (CoP) periodically leads or supports in-p
     - include an overall workshop assessment (poor, fair, good, very good, excellent)
     - include an workshop organization assessment (poor, fair, good, very good, excellent)
 
-
+### Current Data Science Training Workshops
+- [Introduction to Data Science using R (In Person, Victoria, January 24-25 2023)](https://bcgov.github.io/ds-intro-to-r-2-day/index.html)
+    - [Register through the Learning Center today!](https://learning.gov.bc.ca/psc/CHIPSPLM_6/EMPLOYEE/ELM/c/LM_OD_EMPLOYEE_FL.LM_FND_LRN_FL.GBL?Page=LM_FND_LRN_RSLT_FL&Action=U&KWRD=%22ITEM-2120%22)
+- [Introduction to Data Science using Python (In Person, Victoria, January 24-25 2023)](https://bcgov.github.io/ds-intro-to-python/)
+    - [Register through the Learning Center today!](https://learning.gov.bc.ca/psc/CHIPSPLM_6/EMPLOYEE/ELM/c/LM_OD_EMPLOYEE_FL.LM_FND_LRN_FL.GBL?KWRD=%22ITEM-2121%22&Action=U&Page=LM_FND_LRN_RSLT_FL&)
 
 ### Past CoP-supported Data Science Training Workshops
  - [Introduction to Data Science using R (Online, 6-7 May 2020)](https://github.com/bcgov/ds-intro-to-r-2-day)
