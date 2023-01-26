@@ -16,9 +16,7 @@ To share practices, inspire each other & support continuous learning in data sci
 
 ### Current Data Science Events
 - [Introduction to Data Science using R (In Person, Victoria, January 24-25 2023)](https://bcgov.github.io/ds-intro-to-r-2-day/index.html)
-    - [Register through the Learning Center today!](https://learning.gov.bc.ca/psc/CHIPSPLM_6/EMPLOYEE/ELM/c/LM_OD_EMPLOYEE_FL.LM_FND_LRN_FL.GBL?Page=LM_FND_LRN_RSLT_FL&Action=U&KWRD=%22ITEM-2120%22)
 - [Introduction to Data Science using Python (In Person, Victoria, January 24-25 2023)](https://bcgov.github.io/ds-intro-to-python/)
-    - [Register through the Learning Center today!](https://learning.gov.bc.ca/psc/CHIPSPLM_6/EMPLOYEE/ELM/c/LM_OD_EMPLOYEE_FL.LM_FND_LRN_FL.GBL?KWRD=%22ITEM-2121%22&Action=U&Page=LM_FND_LRN_RSLT_FL&)
 
 ### Some Past Data Science Events
  - [bcdata: An R package to help make open data part of your data science workflow (Webinar, 26 March 2020)](https://bcgov.github.io/bcgov-rstats-public-presentations/2020-03-26_bcdata_lunch_and_learn/bcdata-2020-lunch-and-learn.html#1)
